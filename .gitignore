@@ -10,10 +10,14 @@
 # Backup Files
 /upload/system/storage/backup/*
 !/upload/system/storage/backup/index.html
+/storage/backup/*
+!/storage/backup/index.html
 
 # System Cache Files
 /upload/system/storage/cache/*
 !/upload/system/storage/cache/index.html
+/storage/cache/*
+!/storage/cache/index.html
 
 # Download Files
 /upload/system/storage/download/*
