@@ -56,3 +56,6 @@
 # IDE Project files
 /.idea
 /upload/.idea
+
+/storage/cache
+/storage/logs
