@@ -213,7 +213,7 @@ class ModelCatalogProduct extends Model {
                 if(in_array(__FUNCTION__, array('getProductSpecials'))){
                     $data['filter_special'] = true;
                 }
-                if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
+                if(in_array(__FUNCTION__, array('getProductSpecials'))){
                     //d_ajax_filter
                     $this->load->model('extension/module/d_ajax_filter');
                     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
