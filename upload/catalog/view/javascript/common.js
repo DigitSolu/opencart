@@ -23,6 +23,34 @@ function getURLVar(key) {
 }
 
 $(document).ready(function() {
+	$('.product-thumb .product-item').hover(
+		function(){
+			$(this).closest('.products-container').addClass('item-hover');
+		},
+		function(){
+			$(this).closest('.products-container').removeClass('item-hover');
+		}
+	);
+	$('.horizontal-menu .ul-top-items .li-top-item').hover(
+		function(){
+			$(this).closest('.col-hoz').addClass('item-hover');
+		},
+		function(){
+			$(this).closest('.col-hoz').removeClass('item-hover');
+		}
+	);
+	// Custom move breadcrumb by Plazathemes
+	$("body:not(.common-home) header").after('<div class="breadcrumbs"><div class="container"><div class="container-inner"></div></div></div>');	
+	var breadcrumb = $('body ul.breadcrumb');
+	var breadcrumbs = $('.breadcrumbs');
+	var breadcrumbs_container = $('.breadcrumbs .container .container-inner');
+	var breadcrumbs_container2 = $('.breadcrumbs .container');
+	var page_title_h1 = $('#content > h1');
+	//var category_image = $('.category-image');
+	page_title_h1.appendTo(breadcrumbs_container);
+	breadcrumb.appendTo(breadcrumbs_container);
+	//category_image.appendTo(breadcrumbs);
+	
 	// Highlight any found errors
 	$('.text-danger').each(function() {
 		var element = $(this).parent().parent();
@@ -88,7 +116,9 @@ $(document).ready(function() {
 		$('#content .row > .product-grid').attr('class', 'product-layout product-list col-xs-12');
 		$('#grid-view').removeClass('active');
 		$('#list-view').addClass('active');
-
+		$(".product-thumb .product-item").each(function() {
+			
+		});
 		localStorage.setItem('display', 'list');
 	});
 
@@ -98,16 +128,18 @@ $(document).ready(function() {
 		var cols = $('#column-right, #column-left').length;
 
 		if (cols == 2) {
-			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-6 col-md-6 col-sm-12 col-xs-12');
+			$('#content .product-list').attr('class', 'product-layout product-grid grid-style col-lg-6 col-md-6 col-sm-6 col-xs-6 product-items');
 		} else if (cols == 1) {
-			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12');
+			$('#content .product-list').attr('class', 'product-layout product-grid grid-style col-lg-4 col-md-4 col-sm-6 col-xs-6 product-items');
 		} else {
-			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12');
+			$('#content .product-list').attr('class', 'product-layout product-grid grid-style col-lg-3 col-md-3 col-sm-6 col-xs-6 product-items');
 		}
 
 		$('#list-view').removeClass('active');
 		$('#grid-view').addClass('active');
-
+		$(".product-thumb .product-item").each(function() {
+			
+		});
 		localStorage.setItem('display', 'grid');
 	});
 
@@ -157,16 +189,17 @@ var cart = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#content').parent().before('<div class="alert alert-fix alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {
-						$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+						$('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
 					}, 100);
 
-					$('html, body').animate({ scrollTop: 0 }, 'slow');
+					//$('html, body').animate({ scrollTop: 0 }, 'slow');
 
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					//$('#cart').addClass("open");
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
@@ -189,7 +222,7 @@ var cart = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+					$('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -197,6 +230,7 @@ var cart = {
 				} else {
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
 				}
+				//$('#cart').addClass("open");
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -218,7 +252,7 @@ var cart = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+					$('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -253,7 +287,7 @@ var voucher = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+					$('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -284,13 +318,13 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#content').parent().before('<div class="alert alert-fix alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				}
 
 				$('#wishlist-total span').html(json['total']);
-				$('#wishlist-total').attr('title', json['total']);
+				//$('#wishlist-total').attr('title', json['total']);
 
-				$('html, body').animate({ scrollTop: 0 }, 'slow');
+				//$('html, body').animate({ scrollTop: 0 }, 'slow');
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -313,11 +347,11 @@ var compare = {
 				$('.alert-dismissible').remove();
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#content').parent().before('<div class="alert alert-fix alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 					$('#compare-total').html(json['total']);
 
-					$('html, body').animate({ scrollTop: 0 }, 'slow');
+					//$('html, body').animate({ scrollTop: 0 }, 'slow');
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {

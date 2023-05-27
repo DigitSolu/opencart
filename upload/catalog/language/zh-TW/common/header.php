@@ -1,6 +1,11 @@
 <?php
 // Text
 $_['text_home']          = '首頁';
+// Edit by Plazathemes
+$_['text_wishlist']      = '<span class="text-wishlist">Wish List</span> <span class="txt-count">%s</span>';
+$_['text_call_us']      = '聯絡電話:';
+$_['text_store_locator']      = 'Store Locator';
+
 $_['text_wishlist']      = '收藏 (%s)';
 $_['text_shopping_cart'] = '購物車';
 $_['text_category']      = '導航欄';

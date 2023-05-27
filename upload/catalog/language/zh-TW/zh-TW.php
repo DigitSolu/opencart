@@ -1,4 +1,16 @@
 <?php
+// Custom for Plazathemes
+$_['button_quickview']            = '快速查看';
+$_['text_sale'] = "Sale";
+$_['text_new'] = "New";
+$_['text_days']  = "day";
+$_['text_hours'] = "hour";
+$_['text_mins']  = "min";
+$_['text_secs']  = "sec";
+$_['text_countdown']  = "<span>Hurry up!</span> Offer ends in:";
+$_['text_stock']               = 'Availability:';
+$_['text_instock']             = 'In Stock';
+
 // Locale
 
 $_['code']                  = 'zh-TW';

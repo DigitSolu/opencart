@@ -16,6 +16,18 @@ $_['text_content_bottom'] = 'Content Bottom';
 $_['text_column_left']    = 'Column Left';
 $_['text_column_right']   = 'Column Right';
 
+// Custom for Plazathemes
+$_['text_module_position1'] = 'Vertical Menu';
+$_['text_module_position2'] = 'Hozirontal Menu';
+$_['text_module_position3'] = 'Mobile Menu';
+$_['text_module_position4'] = 'Module Position 4';
+$_['text_module_position5'] = 'Module Position 5';
+$_['text_module_position6'] = 'Module Position 6';
+$_['text_module_position7'] = 'Module Position 7';
+$_['text_module_position8'] = 'Module Position 8';
+$_['text_module_position9'] = 'Module Position 9';
+$_['text_module_position10'] = 'Module Position 10';
+
 // Column
 $_['column_name']         = 'Layout Name';
 $_['column_action']       = 'Action';

@@ -3,6 +3,11 @@ namespace Template;
 final class Twig {
 	private $data = array();
 
+            public function __construct($registry) {
+                $this->registry = $registry;
+            }
+            
+
 	public function set($key, $value) {
 		$this->data[$key] = $value;
 	}
@@ -32,9 +37,20 @@ final class Twig {
 		);
 
 		try {
-			$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
+			
+            //d_twig_manager.xml
+            //$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
+			$loader = new \Twig\Loader\FilesystemLoader(str_replace($filename.'.twig','', modification(DIR_TEMPLATE.$filename.'.twig')));
+            
 
 			$twig = new \Twig\Environment($loader, $config);
+
+            //d_twig_manager.xml >= 3.0.3.5 
+            if (file_exists(DIR_SYSTEM . 'library/template/Twig/Extension/DTwigManager.php')) {
+                require_once(DIR_SYSTEM . 'library/template/Twig/Extension/DTwigManager.php');
+                $twig->addExtension(new \Twig_Extension_DTwigManager($this->registry));
+            }
+            
 
 			return $twig->render($filename . '.twig', $this->data);
 		} catch (Exception $e) {
