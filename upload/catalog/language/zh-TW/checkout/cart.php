@@ -8,7 +8,7 @@ $_['text_remove']              = '您已成功更新了購物車！';
 $_['text_login']               = '註意： 您必須<a href="%s">登錄</a> 或 <a href="%s">創建新賬戶</a> 後才能顯示單價！';
 $_['text_items']               = '%s 個商品 - %s';
 $_['text_points']              = '獎勵積分： %s';
-$_['text_next']                = '下壹步您想要做什麽？';
+$_['text_next']                = '下一步您想要做什麽？';
 $_['text_next_choice']         = '選擇使用折扣券， 或獎勵積分， 或預估配送成本';
 $_['text_empty']               = '您的購物車內沒有商品！';
 $_['text_day']                 = '天';
