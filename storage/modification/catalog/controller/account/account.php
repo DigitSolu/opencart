@@ -56,6 +56,13 @@ class ControllerAccountAccount extends Controller {
 		}
 		
 		$data['wishlist'] = $this->url->link('account/wishlist');
+
+				$data['delaccount_status'] = $this->config->get('module_delaccount_status');
+				if ($data['delaccount_status']) {
+					$this->load->language('extension/module/delaccount');
+					$data['delete'] = $this->url->link('extension/module/delaccount', '', true);
+				}
+			
 		$data['order'] = $this->url->link('account/order', '', true);
 		$data['download'] = $this->url->link('account/download', '', true);
 		
