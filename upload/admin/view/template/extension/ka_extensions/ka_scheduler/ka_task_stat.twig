@@ -1,0 +1,56 @@
+{# 
+ Project: Task Scheduler
+ Author : karapuz <support@ka-station.com>
+
+ Version: 2 ($Revision: 139 $) #}
+
+{{ header }}{{ column_left }} 
+<div id="content">
+
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a onclick="javascript: location = '{{ cancel }}';" class="btn btn-default"><i class="fa fa-reply"></i> {{ t('Back') }}</a>
+			</div>
+			<h1><i class="fa fa-puzzle-piece"></i> {{ t('Task Statistics') }}</h1>
+			{{ ka_breadcrumbs }} 
+    </div>
+    
+  <div class="container-fluid">
+  	{{ ka_top }} 
+
+		<div class="panel panel-default">
+		<div class="panel-body">
+      <form action="" method="post" enctype="multipart/form-data" id="form">
+
+        {% if (task['task_id'] is not empty) %} 
+          <input type="hidden" name="task_id" value="{{ task['task_id'] }}" />
+        {% endif %} 
+
+        <div class="table-responsive">
+					<table class="table table-bordered table-hover">
+						<tr>
+							<td>Name</td>
+							<td>
+								{{ task['name'] }} 
+							</td>
+						</tr>
+					{% if (task['stat'] is not empty) %} 
+						{% for name,stat in task['stat'] %} 
+							<tr>
+								<td>{{ name }}</td>
+								<td>
+								{{ stat }} 
+								</td>
+							</tr>
+						{% endfor %} 
+					{% endif %} 
+					</table>
+	      </div>
+      </form>
+    </div>
+  	</div>
+	</div>
+</div>
+
+{{ footer }}

@@ -167,6 +167,15 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 
+//karapuz (Ka Extensions platform) 
+			if (class_exists('KaGlobal') && $this->user->hasPermission('access', 'extension/extension/ka_extensions')) {
+				$marketplace[] = array(
+					'name'	   => $this->language->get('Ka Extensions'),
+					'href'     => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=ka_extensions', true),
+					'children' => array()
+				);
+			}
+///karapuz (Ka Extensions platform)
 			if ($this->user->hasPermission('access', 'marketplace/modification')) {
 				$marketplace[] = array(
 					'name'	   => $this->language->get('text_modification'),
@@ -404,6 +413,17 @@ class ControllerCommonColumnLeft extends Controller {
 			}
 
 			// Users
+//karapuz (install.xml) 
+			if ($this->user->hasPermission('access', 'extension/ka_extensions/ka_scheduler/ka_tasks')) {
+				if (class_exists('KaGlobal') && KaGlobal::isKaInstalled('ka_scheduler', true)) {
+					$system[] = array(
+						'name'	   => KaGlobal::t('Task Scheduler'),
+						'href'     => $this->url->link('extension/ka_extensions/ka_scheduler/ka_tasks', 'user_token=' . $this->session->data['user_token'], true),
+						'children' => array()
+					);
+				}
+			}
+///karapuz (install.xml) 
 			$user = array();
 
 			if ($this->user->hasPermission('access', 'user/user')) {

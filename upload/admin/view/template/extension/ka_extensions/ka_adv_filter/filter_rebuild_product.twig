@@ -1,0 +1,73 @@
+{#
+    $Project: Advanced Filter $
+    $Author: karapuz team <support@ka-station.com> $
+    $Version: 1.0.1.2 $ ($Revision: 60 $)
+#}
+
+<div id="modal-filter-rebuild" class="modal">
+	<div class="modal-dialog"  style="width: 600px; padding-top: 200px;">
+	  <div class="modal-content">
+	    <div class="modal-header">
+	      <h4 class="modal-title">Rebuild Filters For Products</h4>
+	    </div>
+	    
+    	<div class="modal-body">
+				<p>Filter Rebuild process started. The page updates every 10-15 seconds. Please do not close the window.</p>
+				<div>Completion at: <span id="total_rebuilt_filters">0%</span></div>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+<script type="text/javascript"><!--
+
+function FRebuildStart() {
+	FRebuildLoop(true);
+}
+
+function FRebuildLoop(is_start) {
+
+	var continue_param = '1';
+	if (is_start) {
+		continue_param = '0';
+	}
+	
+	$.ajax({
+		url: 'index.php?route=extension/ka_extensions/ka_adv_filter/product/rebuildFilters&user_token=' + getURLVar('user_token') + '&continue=' + continue_param,
+		dataType: 'json',
+		success: function(json) {
+			if (!json['result']) {
+				alert('Ajax error. Please reload the page.');
+				return;
+			}
+			
+			$('#total_rebuilt_filters').html(json['complete_at']);
+			
+			if (json['result'] == 'continue') {
+				FRebuildLoop(false);
+			}
+			
+			if (json['result'] == 'end') {
+				FRebuildEnd();
+			}
+		}
+	});	
+
+}
+
+function FRebuildEnd() {
+	location.reload();
+}
+
+
+function onFilterRebuild() {
+	$('#modal-filter-rebuild').modal({
+		'backdrop':'static',
+		'show': true,
+		'keyboard': false
+	});
+	
+	FRebuildStart();
+}
+
+</script>

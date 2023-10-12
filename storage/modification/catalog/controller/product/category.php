@@ -9,6 +9,13 @@ class ControllerProductCategory extends Controller {
 
 		$this->load->model('tool/image');
 
+//karapuz (Advanced Filter) 
+		if (isset($this->request->get['filter_price'])) {
+			$filter_price = $this->request->get['filter_price'];
+		} else {
+			$filter_price = '';
+		}
+///karapuz (Advanced Filter)
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
 		} else {
@@ -323,6 +330,25 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
+//karapuz (Advanced Filter) 
+			$price_range = $price_range_internal = array(
+				'min' => 0,
+				'max' => 0
+			);		
+
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+				
+				list($price_range['min'], $price_range['max']) = explode('-', $this->request->get['filter_price']);
+				$currency = $this->config->get('config_currency');
+				if ($currency != $this->session->data['currency']) {
+					$price_range_internal['min'] = $this->currency->convert($price_range['min'], $this->session->data['currency'], $currency);
+					$price_range_internal['max'] = $this->currency->convert($price_range['max'], $this->session->data['currency'], $currency);
+				} else {
+					$price_range_internal = $price_range;
+				}
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
 			}
@@ -358,6 +384,9 @@ class ControllerProductCategory extends Controller {
 			$data['products'] = array();
 
 			$filter_data = array(
+//karapuz (Advanced Filter) 
+				'filter_price_range' => $price_range_internal,
+///karapuz (Advanced Filter)
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
 				'sort'               => $sort,
@@ -534,6 +563,11 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
+//karapuz (Advanced Filter) 
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
 			}
@@ -602,6 +636,11 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
+//karapuz (Advanced Filter) 
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
 			}
@@ -630,6 +669,11 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
+//karapuz (Advanced Filter) 
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
 			}
@@ -701,6 +745,11 @@ class ControllerProductCategory extends Controller {
 				$url .= '&path=' . $this->request->get['path'];
 			}
 
+//karapuz (Advanced Filter) 
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
 			}

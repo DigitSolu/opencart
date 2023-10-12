@@ -23,6 +23,83 @@ class ControllerProductSearch extends Controller {
 			$tag = '';
 		}
 
+//karapuz (Advanced Filter) 
+		//
+		// price_range - keeps data in customer currency (for displaying to the customer)
+		// price_range_internal - keeps data in the store currency (for searches)
+		//
+		$price_range_internal = array(
+			'min' => 0,
+			'max' => 0
+		);		
+		$price_range = array();
+
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+
+			// init some variables
+			//
+			$kamodel_price_search    = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/price_search');			
+			$kamdl_adv_filter_common = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/common');
+			
+			if (!empty($kamdl_adv_filter_common)) {
+				$data['is_filter_shown'] = $kamdl_adv_filter_common->isFilterOnSearchPage();
+			}
+			if (empty($data['is_filter_shown'])) {
+				$data['is_price_search_shown'] = $kamodel_price_search->isPriceSearchShown();
+			}
+			
+			$this->load->language('extension/ka_extensions/ka_adv_filter/common');
+			
+			$data['is_ka_adv_filter_installed'] = true;
+
+			// here we always have to update $price_range_internal from the filter_price= get parameter
+			// because it can be set by the filter or manually
+			//
+			
+			// calculate the maximum range
+			//
+			$filter_category_id = 0;
+			$including_subcategories = 1;
+			if (!empty($this->request->get['category_id'])) {
+				$filter_category_id = $this->request->get['category_id'];
+				if (!isset($this->request->get['sub_category'])) {
+					$including_subcategories = false;
+				}
+			}
+			
+			list($price_range_internal['min'], $price_range_internal['max']) = $kamodel_price_search->getPriceRange($filter_category_id, $including_subcategories);
+			
+			$data['placeholder_price_from'] = floor($this->currency->convert($price_range_internal['min'], $this->config->get('config_currency'), $this->session->data['currency']));
+			$data['placeholder_price_to'] = ceil($this->currency->convert($price_range_internal['max'], $this->config->get('config_currency'), $this->session->data['currency']));
+			
+			// process the customer defined range
+			//
+			if (isset($this->request->get['filter_price'])) {
+				$prices = explode('-', $this->request->get['filter_price']);
+				if (strlen($prices[0])) {
+					$price_range['min'] = $prices[0];
+				}
+				if (isset($prices[1]) && strlen($prices[1])) {
+					$price_range['max'] = $prices[1];
+				}
+			}
+			
+			// round the customer defined range
+			//
+			if (isset($price_range['min'])) {
+				$price_range['min'] = ceil($price_range['min']);
+				$price_range_internal['min'] = $this->currency->convert($price_range['min'], $this->config->get('config_currency'), $this->session->data['currency']);
+			}
+			if (isset($price_range['max'])) {
+				$price_range['max'] = floor($price_range['max']);
+				$price_range_internal['max'] = $this->currency->convert($price_range['max'], $this->config->get('config_currency'), $this->session->data['currency']);
+			}
+			
+			if ($this->config->get('config_tax') == '1') {
+				$data['is_price_range_wo_taxes'] = $kamodel_price_search->isTaxNotUsed();
+			}
+		}
+///karapuz (Advanced Filter)
 		if (isset($this->request->get['description'])) {
 			$description = $this->request->get['description'];
 		} else {
@@ -96,6 +173,18 @@ class ControllerProductSearch extends Controller {
 			$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
 		}
 
+//karapuz (Advanced Filter) 
+		$filter = '';
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+			if (isset($this->request->get['filter_price'])) {
+				$url .= '&filter_price=' . $this->request->get['filter_price'];
+			}
+
+			if (isset($this->request->get['filter'])) {
+				$filter = $this->request->get['filter'];
+			}			
+		}
+///karapuz (Advanced Filter)
 		if (isset($this->request->get['description'])) {
 			$url .= '&description=' . $this->request->get['description'];
 		}
@@ -177,8 +266,12 @@ class ControllerProductSearch extends Controller {
 
 		$data['products'] = array();
 
-		if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
+		if (isset($this->request->get['search']) || isset($this->request->get['tag']) || 'show_all') {
 			$filter_data = array(
+//karapuz (Advanced Filter) 
+				'filter_price_range' => $price_range_internal,
+				'filter_filter'      => $filter,
+///karapuz (Advanced Filter)
 				'filter_name'         => $search,
 				'filter_tag'          => $tag,
 				'filter_description'  => $description,
@@ -270,6 +363,16 @@ class ControllerProductSearch extends Controller {
 				$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
 			}
 
+//karapuz (Advanced Filter) 
+			if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+				if (isset($this->request->get['filter_price'])) {
+					$url .= '&filter_price=' . $this->request->get['filter_price'];
+				}
+				if (isset($this->request->get['filter'])) {
+					$url .= '&filter=' . $this->request->get['filter'];
+				}
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['description'])) {
 				$url .= '&description=' . $this->request->get['description'];
 			}
@@ -354,6 +457,16 @@ class ControllerProductSearch extends Controller {
 				$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
 			}
 
+//karapuz (Advanced Filter) 
+			if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+				if (isset($this->request->get['filter_price'])) {
+					$url .= '&filter_price=' . $this->request->get['filter_price'];
+				}
+				if (isset($this->request->get['filter'])) {
+					$url .= '&filter=' . $this->request->get['filter'];
+				}
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['description'])) {
 				$url .= '&description=' . $this->request->get['description'];
 			}
@@ -398,6 +511,16 @@ class ControllerProductSearch extends Controller {
 				$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
 			}
 
+//karapuz (Advanced Filter) 
+			if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+				if (isset($this->request->get['filter_price'])) {
+					$url .= '&filter_price=' . $this->request->get['filter_price'];
+				}
+				if (isset($this->request->get['filter'])) {
+					$url .= '&filter=' . $this->request->get['filter'];
+				}
+			}
+///karapuz (Advanced Filter)
 			if (isset($this->request->get['description'])) {
 				$url .= '&description=' . $this->request->get['description'];
 			}
@@ -448,6 +571,10 @@ class ControllerProductSearch extends Controller {
 				}
 
 				$search_data = array(
+//karapuz (Advanced Filter) 
+					'price_range' => $price_range_internal,
+					'filter_filter' => $filter,
+///karapuz (Advanced Filter)
 					'keyword'       => $search,
 					'category_id'   => $category_id,
 					'sub_category'  => $sub_category,
@@ -463,8 +590,30 @@ class ControllerProductSearch extends Controller {
 
 		$data['search'] = $search;
 		$data['description'] = $description;
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+		
+			if (!empty($data['is_price_search_shown'])) {
+				if (isset($price_range['min'])) {
+					$data['price_from'] = $price_range['min'];
+				}
+				if (isset($price_range['max'])) {
+					$data['price_to'] = $price_range['max'];
+				}
+				$data['text_from']  = $this->language->get('text_from');
+				$data['text_to']    = $this->language->get('text_to');
+				$data['text_price'] = sprintf($this->language->get('text_price'), '$');			
+			}
+		}
+///karapuz (Advanced Filter)
 		$data['category_id'] = $category_id;
 		$data['sub_category'] = $sub_category;
+//karapuz (Advanced Filter) 
+		$kamdl_adv_filter_common = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/common');
+		if (!empty($kamdl_adv_filter_common)) {
+			$data['is_filter_shown'] = $kamdl_adv_filter_common->isFilterOnSearchPage();
+		}
+///karapuz (Advanced Filter)
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;

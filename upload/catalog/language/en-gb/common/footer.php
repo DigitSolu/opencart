@@ -16,5 +16,5 @@ $_['text_wishlist']     = 'Wish List';
 $_['text_newsletter']   = 'Newsletter';
 // Edit by Plazathemes
 $_['text_about_us']   = 'About us';
-$_['text_our_newsletter']   = 'Join Our Newsletter';
+$_['text_our_newsletter']   = 'APP下載';
 $_['text_powered']      = 'Powered By <a href="http://plazathemes.com">Plazathemes</a>. %s &copy; %s';

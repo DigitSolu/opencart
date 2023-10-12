@@ -10,7 +10,10 @@
 /**
 * Loader class
 */
-final class Loader {
+//karapuz (Ka Extensions platform) 
+if (!class_exists('\Loader')) {
+///karapuz (Ka Extensions platform)
+class Loader {
 	protected $registry;
 
 	/**
@@ -74,6 +77,9 @@ final class Loader {
 			$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $route);
 			
 			if (is_file($file)) {
+//karapuz (Ka Extensions platform) 
+				if  ( ! empty ( $class )  &&  ! class_exists ( $class ) )
+///karapuz (Ka Extensions platform)
 				include_once(modification($file));
 	
 				$proxy = new Proxy();
@@ -151,6 +157,9 @@ final class Loader {
 		$class = str_replace('/', '\\', $route);
 
 		if (is_file($file)) {
+//karapuz (Ka Extensions platform) 
+			if  ( ! empty ( $class )  &&  ! class_exists ( $class ) )
+///karapuz (Ka Extensions platform)
 			include_once(modification($file));
 
 			$this->registry->set(basename($route), new $class($this->registry));
@@ -264,4 +273,4 @@ final class Loader {
 			return $output;
 		};
 	}	
-}
+}}

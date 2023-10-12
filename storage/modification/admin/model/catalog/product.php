@@ -133,6 +133,12 @@ class ModelCatalogProduct extends Model {
 			}
 		}
 		
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+			$kamodel_adv_filter_product = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/product');
+			$kamodel_adv_filter_product->onProductUpdate($product_id);
+		}
+///karapuz (Advanced Filter)
 		if (isset($data['product_layout'])) {
 			foreach ($data['product_layout'] as $store_id => $layout_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_layout SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
@@ -303,6 +309,12 @@ class ModelCatalogProduct extends Model {
 			}
 		}
 		
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+			$kamodel_adv_filter_product = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/product');
+			$kamodel_adv_filter_product->onProductUpdate($product_id);
+		}
+///karapuz (Advanced Filter)
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 
 		if (isset($data['product_layout'])) {
@@ -366,6 +378,12 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_product WHERE product_id = '" . (int)$product_id . "'");
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+			$kamodel_adv_filter_product = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/product');
+			$kamodel_adv_filter_product->onProductUpdate($product_id);
+		}
+///karapuz (Advanced Filter)
 
 		$this->cache->delete('product');
 	}

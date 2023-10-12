@@ -1,0 +1,229 @@
+{# 
+ Project: Task Scheduler 
+ Author : karapuz <support@ka-station.com>
+
+ Version: 3 ($Revision: 139 $)
+#}
+
+{{ header }}{{ column_left }} 
+
+<div id="content">
+
+<style type="text/css">
+.cron_notice {
+  
+}
+
+table.list td.msg_not_found {
+  background-color: yellow;
+  color: black;
+}
+
+table.list td.msg_installed {
+  background-color: #7FFF00;
+  color: black;
+}
+
+table.list td.msg_wrong {
+  background-color: red;
+  color: black;
+}
+
+</style>
+
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-input" data-toggle="tooltip" title="{{ t('button_save') }}" class="btn btn-primary"><i class="fa fa-check-circle"></i> {{ t('button_save') }}</button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ t('button_cancel') }}" class="btn btn-default"><i class="fa fa-reply"></i>  {{ t('button_cancel') }}</a>
+      </div>
+      <h1><i class="fa fa-puzzle-piece"></i> {{ heading_title }}</h1>
+      {{ ka_breadcrumbs }} 
+    </div>
+  </div>
+
+	<div class="container-fluid">
+		{{ ka_top }} 
+
+		<div class="panel panel-default">
+		<div class="panel-body">
+		  
+    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-input">
+      <input type="hidden" name="mode" value="" id="mode" />
+      
+			<div id="service_line">
+				<table>
+					<tr>
+						<td><b>Full Version</b>: {{ extension_version }}&nbsp;&nbsp;&nbsp;</td>
+						<td><b>Author</b>: karapuz&nbsp;&nbsp;&nbsp;</td>
+						<td><b>Contact Us</b>: <a href="mailto:support@ka-station.com">via email</a>&nbsp;&nbsp;&nbsp;</td>
+						<td><a href="https://www.ka-station.com/index.php?route=information/contact" target="_blank">via secure form at www.ka-station.com</a>&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+				</table>
+				<br />
+			</div>
+      
+      <table class="table table-striped table-bordered table-hover">
+        <thead> 
+          <tr>
+            <td style="width: 360px" class="text-left">Setting</td>
+            <td class="text-left">Value</td>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% if (cronjob_install_status == 'crontab_not_found') %} 
+            <tr>
+              <td class="left msg_not_found" colspan="2"><b>WARNING:</b> crontab command is not found. Make sure the script is called periodically from an external site.</td>
+            </tr>
+          {% elseif (cronjob_install_status == 'wget_not_found') %} 
+            <tr>
+              <td class="left msg_not_found" colspan="2"><b>WARNING:</b> wget command is not found on the server. Make sure the script is called periodically from an external site.</td>
+            </tr>
+          {% elseif (cronjob_install_status == 'cronjob_not_found') %} 
+            <tr>
+              <td class="left msg_not_found" colspan="2"><b>WARNING:</b> Cronjob record is not found on the server.</td>
+            </tr>
+            <tr>
+              <td class="left">Automatic cronjob installation
+              </td>
+              <td class="left">
+                <input type="button"  value="Install" onclick="javascript: $('#mode').prop('value', 'install'); $('#form-input').submit();" />
+              </td>
+            </tr>
+          {% elseif (cronjob_install_status == 'wrong_cronjob') %} 
+            <tr>
+              <td class="left msg_wrong" colspan="2"><b>WARNING:</b> cronjob record exists but it cannot be confirmed as valid.</td>
+            </tr>
+            <tr>
+              <td class="left">Automatic cronjob installation
+              </td>
+              <td class="left">
+                <input type="button"  value="Re-install" onclick="javascript: $('#mode').prop('value', 'reinstall'); $('#form-input').submit();" />
+              </td>
+            </tr>            
+          {% elseif (cronjob_install_status == 'cronjob_installed') %} 
+            <tr>
+              <td class="left msg_installed" colspan="2"><b>INFO:</b> Cronjob is installed successfully.</td>
+            </tr>
+            <tr>
+              <td class="left">Automatic cronjob installation
+              </td>
+              <td class="left">
+                <input type="button"  value="Uninstall" onclick="javascript: $('#mode').prop('value', 'uninstall'); $('#form-input').submit();" />
+              </td>
+            </tr>
+          {% endif %} 
+          
+          <tr>
+            <td class="left" width="60%">Version          
+            </td>
+            <td class="left" width="40%">
+              {{ extension_version }} 
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left">'Run Scheduler' Key
+            </td>
+            <td class="left">
+              <input type="text" name="ka_scheduler_run_scheduler_key" value="{{ ka_scheduler_run_scheduler_key }}" />
+              {% if (error['ka_scheduler_run_scheduler_key'] is not empty) %} 
+                <span class="error">{{ error['ka_scheduler_run_scheduler_key'] }}</span>
+              {% endif %} 
+            </td>
+          </tr>
+
+          <tr>
+            <td class="left">Stop Task After 'N' Minutes Activity
+            </td>
+            <td class="left">
+              <input type="text" name="ka_scheduler_stop_task_after_n_minutes" value="{{ ka_scheduler_stop_task_after_n_minutes }}" />
+              {% if (error['ka_scheduler_stop_task_after_n_minutes'] is not empty) %} 
+                <span class="error">{{ error['ka_scheduler_stop_task_after_n_minutes'] }}</span>
+              {% endif %} 
+            </td>
+          </tr>
+
+          <tr>
+            <td class="left">Stop Task After 'N' Failures
+            </td>
+            <td class="left">
+              <input type="text" name="ka_scheduler_stop_task_after_n_failures" value="{{ ka_scheduler_stop_task_after_n_failures }}" />
+              {% if (error['ka_scheduler_stop_task_after_n_failures'] is not empty) %} 
+                <span class="error">{{ error['ka_scheduler_stop_task_after_n_failures'] }}</span>
+              {% endif %} 
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left">Treat Task As Dead If It Does Not Respond After N Minutes
+            </td>
+            <td class="left">
+              <input type="text" name="ka_scheduler_task_is_dead_after_n_minutes" value="{{ ka_scheduler_task_is_dead_after_n_minutes }}" />
+              {% if (error['ka_scheduler_task_is_dead_after_n_minutes'] is not empty) %} 
+                <span class="error">{{ error['ka_scheduler_task_is_dead_after_n_minutes'] }}</span>
+              {% endif %} 
+            </td>
+          </tr>
+                              
+          <tr>
+            <td class="left">Send E-mail to Administrator on Task Completion
+            </td>
+            <td class="left">
+              <input type="checkbox" name="ka_scheduler_send_email_on_completion" value="Y" {% if (ka_scheduler_send_email_on_completion is defined and ka_scheduler_send_email_on_completion == 'Y') %} checked="checked" {% endif %} />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="left" colspan="2">
+              <div class="attention">
+              To make this module work you have to run the following script periodically 
+              <br />
+              <b>{{ run_scheduler }}</b>
+              <br />
+              <hr />
+              <h3>Option 1</h3>              
+              Convenient way to implement it is to add script execution into 
+              <a href="http://en.wikipedia.org/wiki/Cron" target="_new">cron jobs</a>              
+              in your hosting control panel. The request can be processed by 
+              <a href="http://en.wikipedia.org/wiki/Wget" target="_new">wget</a> console command.
+              <br />
+              The line in cron job list may look like this:
+              <br />
+              <b>/usr/bin/wget -O /dev/null "{{ run_scheduler }}"</b>
+              <br />
+              'wget' application should be available at the specified path.
+              
+              <br /><br />
+              Cron job execution period depends on your needs and hosting restrictions but 
+              it is recommended to execute the script every 10-60 minutes.
+              If no work required then no significant resources will be consumed.
+              <br />
+              <hr />
+              <h3>Option 2</h3>
+              Another way is to use an external service like "EasyCron" for calling a cron task.
+              In case of using "EasyCron" you should consider purchasing a 'Starter' plan there 
+              because cronjob execution may require up to 60 seconds timeout. <br />
+              
+              If you would like to proceed with installation of the task execution
+              at 'EasyCron' service please click '<a target="_blank" href="http://www.easycron.com/cron-job-scheduler?ref=12676&url={{ html_entity_decode(run_scheduler)|url_encode }}&specifiedBy=2&specifiedValue=*/10%20*%20*%20*%20*">install EasyCron</a>'. 
+              Keep in mind that we are not responsible for communcation with this service 
+              because it is run by an independent company.
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </form>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript"><!--
+
+//--></script>
+
+{{ footer }}

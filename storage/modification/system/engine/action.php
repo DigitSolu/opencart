@@ -10,6 +10,11 @@
 /**
 * Action class
 */
+//karapuz (Ka Extensions platform) 
+@include_once ( DIR_SYSTEM . "library/extension/ka_extensions/startup.php");
+
+if (!class_exists('\Action')) {
+///karapuz (Ka Extensions platform)
 class Action {
 	private $id;
 	private $route;
@@ -66,6 +71,9 @@ class Action {
 		
 		// Initialize the class
 		if (is_file($file)) {
+//karapuz (Ka Extensions platform) 
+			if  ( ! empty ( $class )  &&  ! class_exists ( $class ) )
+///karapuz (Ka Extensions platform)
 			include_once(modification($file));
 		
 			$controller = new $class($registry);
@@ -81,4 +89,4 @@ class Action {
 			return new \Exception('Error: Could not call ' . $this->route . '/' . $this->method . '!');
 		}
 	}
-}
+}}

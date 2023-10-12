@@ -1,0 +1,73 @@
+{#
+    $Project: Advanced Filter $
+    $Author: karapuz team <support@ka-station.com> $
+    $Version: 1.0.1.0 $ ($Revision: 34 $)
+#}
+
+<div id="modal-price-rebuild" class="modal">
+	<div class="modal-dialog"  style="width: 600px; padding-top: 200px;">
+	  <div class="modal-content">
+	    <div class="modal-header">
+	      <h4 class="modal-title">Rebuild Price Cache</h4>
+	    </div>
+	    
+    	<div class="modal-body">
+				<p>Price Cache Rebuild process started. The statistics updates every 10-15 seconds. Please do not close the window.</p>
+				<div>Completion at: <span id="total_rebuilt_prices">0%</span></div>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+<script type="text/javascript"><!--
+
+function PRebuildStart() {
+	PRebuildLoop(true);
+}
+
+function PRebuildLoop(is_start) {
+
+	var continue_param = '1';
+	if (is_start) {
+		continue_param = '0';
+	}
+	
+	$.ajax({
+		url: 'index.php?route=extension/ka_extensions/ka_adv_filter/price/rebuildPrices&user_token=' + getURLVar('user_token') + '&continue=' + continue_param,
+		dataType: 'json',
+		success: function(json) {
+			if (!json['result']) {
+				alert('Ajax error. Please reload the page.');
+				return;
+			}
+			
+			$('#total_rebuilt_prices').html(json['complete_at']);
+			
+			if (json['result'] == 'continue') {
+				PRebuildLoop(false);
+			}
+			
+			if (json['result'] == 'end') {
+				PRebuildEnd();
+			}
+		}
+	});	
+
+}
+
+function PRebuildEnd() {
+	location.reload();
+}
+
+
+function onPriceRebuild() {
+	$('#modal-price-rebuild').modal({
+		'backdrop':'static',
+		'show': true,
+		'keyboard': false
+	});
+	
+	PRebuildStart();
+}
+
+</script>

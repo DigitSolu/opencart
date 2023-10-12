@@ -1,0 +1,286 @@
+{# 
+
+ Project: Task Scheduler
+ Author : karapuz <support@ka-station.com>
+
+ Version: 3 ($Revision: 139 $)
+
+#}
+
+{{ header }}{{ column_left }} 
+<div id="content">
+
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        {% if (step >= 3) %} 
+        	<button type="submit" form="form-input" data-toggle="tooltip" title="{{ t('Save') }}" class="btn btn-primary"><i class="fa fa-save"></i> {{ t('Save') }}</button>
+        {% else %} 
+        	<button type="submit" form="form-input" data-toggle="tooltip" title="{{ t('Save') }}" class="btn btn-primary"><i class="fa fa-check-circle"></i> {{ t('Save') }}</button>
+        {% endif %} 
+        <a onclick="location = '{{ cancel }}'" data-toggle="tooltip" title="{{ t('Cancel') }}" class="btn btn-default"><i class="fa fa-reply"></i>  {{ t('Cancel') }}</a>
+      </div>
+      <h1><i class="fa fa-puzzle-piece"></i> {% if (task['task_id'] is empty) %}(Step {{ step }} of 3){% endif %}</h1>
+      {{ ka_breadcrumbs }} 
+    </div>
+  </div>
+
+  <div class="container-fluid">
+  	{{ ka_top }} 
+
+		<div class="panel panel-default">
+		<div class="panel-body">
+
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-input">
+
+        <input type="hidden" name="step" value="{{ step }}" />
+        {% if (task['task_id'] is not empty) %} 
+          <input type="hidden" name="task_id" value="{{ task['task_id'] }}" />
+        {% endif %} 
+
+        <div class="table-responsive">
+        <table class="table table-bordered table-hover">        
+          <tr>
+            <td><span class="required">*</span> Name</td>
+            <td>
+              <input type="text" name="name" value="{{ task['name'] }}" size="50" class="form-control" />
+              {% if (error_name['name']) %} 
+                <span class="error">{{ error_name['name'] }}</span><br />
+              {% endif %} 
+            </td>
+          </tr>
+
+          <tr>
+            <td>Active</td>
+            <td>
+              <input type="checkbox" name="active" value="Y" {% if (task['active'] == 'Y') %} checked="checked" {% endif %} class="form-control" />
+            </td>
+          </tr>
+          
+          <tr>
+            <td><span class="required">*</span> Run Every </td>
+            <td>
+				<select name="period_type" id="period_type" onchange="javascript: ka_updateRunEvery();" class="form-control">
+					<option value="">- select -</option>
+					{% for v, k in period_types %}
+						<option value="{{ v }}" {%if v == task.period_type %} selected="selected" {% endif %}>{{ k }}</option>
+					{% endfor %}
+				</select>
+				{% if (error_name['period_type'] is defined) %} 
+				  <span class="error">{{ error_name['period_type'] }}</span><br />
+				{% endif %} 
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="required">*</span> Run At</td>
+            <td>
+              <table>
+              	<tr>
+                  <td id="row_period_at_month" style="padding-right: 10px;">
+                    month
+                  	{% include 'extension/ka_extensions/common/select.twig' with { 'name': 'period_at_month', 'options': months, 'value': task['period_at_month'], 'extra': 'id="period_at_month"', 'first_line': '- select -'} %}
+                  </td>
+                  <td id="row_period_at_dow" style="padding-right: 10px;">
+                    day of week
+                  	{% include 'extension/ka_extensions/common/select.twig' with { 'name': 'period_at_dow', 'options':dows, 'value': task['period_at_dow'], 'extra': 'id="period_at_dow"', 'first_line': '- select -' } %}
+                  </td>
+                  <td id="row_period_at_day" style="padding-right: 10px;">
+                    day
+                    {% include 'extension/ka_extensions/common/select.twig' with { 'name': 'period_at_day', 'options': days, 'value':task['period_at_day'], 'extra':'id="period_at_day"', 'first_line': '- select -'} %}
+                  </td>
+                  <td id="row_period_at_hour" style="padding-right: 10px;">
+                    hour
+                    {% include 'extension/ka_extensions/common/select.twig' with { 'name': 'period_at_hour', 'options': hours, 'value': task['period_at_hour'], 'extra': 'id="period_at_hour"', 'first_line': '- select -'} %}
+                  </td>
+                  <td id="row_period_at_min" style="padding-right: 10px;">
+                    minute
+                    {% include 'extension/ka_extensions/common/select.twig' with { 'name': 'period_at_min', 'options': minutes, 'value': task['period_at_min'], 'extra': 'id="period_at_min"', 'first_line': '- select -'} %}
+                  </td>
+                  <td id="row_every_n_minutes" style="padding-right: 10px;">
+                  	every N minutes
+                  	<input type="text" size="10" id="every_n_minutes" name="every_n_minutes" value="{{ task['every_n_minutes'] }}" class="form-control" />
+                  </td>
+              	</tr>
+              </table>
+            </td>
+          </tr>
+                    
+          <tr>
+            <td><span class="required">*</span> Start After</td>
+            <td>
+            	<div class="input-group date">
+	              <input type="text" name="start_at" value="{{ task['start_at'] is defined ? task['start_at'] : '' }}" class="form-control datetime" data-date-format="YYYY-MM-DD HH:mm" />
+                    <span class="input-group-btn">
+                    	<button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                   	</span>
+                </div>
+				  {% if (error_name['start_at'] is defined) %} 
+					<span class="error">{{ error_name['start_at'] }}</span><br />
+				  {% endif %} 
+            </td>
+          </tr>
+          
+          <tr>
+            <td>Specify End Date</td>
+            <td>
+              <input type="checkbox" id="is_end_at" name="is_end_at" value="Y"  onchange="javascrpt: ka_updateFields();" {% if (is_end_at) %} checked="checked" {% endif %} class="form-control" autocomplete="off" />
+            </td>
+          </tr>
+          
+          <tr id="end_at_row" {% if (not is_end_at) %} style="display:none" {% endif %}>
+            <td><span class="required">*</span> End At</td>
+            <td>
+	         <div class="input-group date">
+              <input type="text" name="end_at" value="{{ is_end_at ? task.end_at : task.start_at }}" class="form-control datetime" data-date-format="YYYY-MM-DD HH:mm" />
+                <span class="input-group-btn">
+                	<button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+               	</span>
+              </div>
+              
+              {% if (error_name['end_at'] is defined) %} 
+                <span class="error">{{ error_name['end_at'] }}</span><br />
+              {% endif %} 
+            </td>
+          </tr>
+                            
+          <tr>
+            <td>{{ t('Priority') }}</td>
+            <td><input type="text" name="priority" value="{{ task['priority'] }}" size="4" class="form-control" /></td>
+          </tr>
+
+          <tr>
+            <td>{{ t('Send E-Mail on Completion') }}<label class="control-label"><span data-toggle="tooltip" title="The global module setting will suppress the email notification anyway"></span></label></td>
+            <td><input type="checkbox" id="is_send_email" name="is_send_email" value="1"  {% if is_send_email  %} checked="checked" {% endif %} autocomplete="off" /></td>
+          </tr>
+          
+          <tr>
+            <td><span class="required">*</span> Module</td>
+            <td>
+            	{% include 'extension/ka_extensions/common/select.twig' with {'name': 'module', 'options': modules, 'value': task['module'], 'first_line': '- select -'} %}
+             	{# for lite version <input type="hidden" name="module" value="{{ task.module }}" /> #}
+            	
+              {% if (error_name['module']) %} 
+                <span class="error">{{ error_name['module'] }}</span><br />
+              {% endif %} 
+            </td>
+          </tr>
+
+          {% if (operations) %} 
+            <tr>
+              <td><span class="required">*</span>Operation</td>
+            
+              <td>              
+              	{% include 'extension/ka_extensions/common/select.twig' with {'name': 'operation', 'options': operations, 'value': task.operation, 'first_line': '- select -' } %}
+               	{# for lite version <input type="hidden" name="operation" value="{{ task.operation }}" /> #}
+              	
+                {% if (error_name['operation']) %} 
+                  <span class="error">{{ error_name['operation'] }}</span><br />
+                {% endif %} 
+              </td>
+            </tr>
+          {% endif %} 
+
+ {% if (op_params) %}
+ {% for op_key,op_param in op_params %} 
+            <tr>
+              <td>{% if (op_param['required']) %}<span class="required">*</span>{% endif %} {{ op_param['title']|e }}
+                {% if (op_param['descr']) %} 
+                  <label class="control-label"><span data-toggle="tooltip" title="{{ op_param['descr'] }}"></span></label>
+                {% endif %} 
+              </td>
+              <td>
+                {% if (op_param['type'] == 'select') %}      
+                  {% if (op_param['options']) %} 
+                     {% include 'extension/ka_extensions/common/select.twig' with {'name': 'params[' ~ op_key ~ ']', 'options': op_param['options'], 'value': (task['params'][op_key] is defined) ? task['params'][op_key]:'', 'first_line': '- select -'} %}
+                  {% else %} 
+                    <b>none</b>
+                  {% endif %} 
+                  
+                {% elseif (op_param['type'] == 'text') %}      
+                  <input type="text" name="params[{{ op_key }}]" value="{{ task['params'][op_key] is defined ? task['params'][op_key]:'' }}" class="form-control" />
+                  
+                {% elseif (op_param['type'] == 'password') %} 
+                  <input type="password" name="params[{{ op_key }}]" value="{{ task['params'][op_key] is defined ? task['params'][op_key]:'' }}" class="form-control" />
+                {% endif %} 
+                {% if (error_name['params'][op_key] is defined) %} 
+                  <span class="error">{{ error_name['params'][op_key] }}</span><br />
+                {% endif %} 
+              </td>
+            </tr>
+ {% endfor %}
+ {% endif %}
+ 
+        </table>
+        </div>
+      </form>
+    </div>
+  	</div>
+  </div>
+</div>
+
+<script type="text/javascript"><!--
+
+$(document).ready(function() {
+  ka_updateRunEvery();
+  ka_updateFields();
+
+  $('.datetime').datetimepicker({
+  	pickDate: true,
+  	pickTime: true
+  });
+});
+
+
+function ka_updateFields() {
+  var is_end_at = $("#is_end_at").prop("checked");
+
+  if (is_end_at) {
+    $("#end_at_row").show();    
+  } else {
+    $("#end_at_row").hide();
+  }
+}
+
+
+function ka_updateRunEvery() {
+  var period_type = $("#period_type").val();
+  
+  $("#row_every_n_minutes").hide();
+  $("#row_period_at_min").hide();
+  $("#row_period_at_hour").hide();
+  $("#row_period_at_day").hide();
+  $("#row_period_at_dow").hide();
+  $("#row_period_at_month").hide();
+    
+  if (period_type == 'every_n_minutes') {
+    $("#row_every_n_minutes").show();
+    
+  } else if (period_type == 'hour') {
+    $("#row_period_at_min").show();
+    
+  } else if (period_type == 'day') {
+    $("#row_period_at_min").show();  
+    $("#row_period_at_hour").show();
+    
+  } else if (period_type == 'week') {
+    $("#row_period_at_min").show();
+    $("#row_period_at_hour").show();
+    $("#row_period_at_dow").show();
+  
+  } else if (period_type == 'month') {
+    $("#row_period_at_min").show();  
+    $("#row_period_at_hour").show();
+    $("#row_period_at_day").show();
+
+  } else if (period_type == 'year') {
+    $("#row_period_at_min").show();  
+    $("#row_period_at_hour").show();
+    $("#row_period_at_day").show();
+    $("#row_period_at_month").show();
+  }
+}
+
+//--></script>
+
+{{ footer }}

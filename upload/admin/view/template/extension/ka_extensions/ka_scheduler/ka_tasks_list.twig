@@ -1,0 +1,128 @@
+{# 
+ Project: Task Scheduler
+ Author : karapuz <support@ka-station.com>
+
+ Version: 2 ($Revision: 139 $) #}
+
+{{ header }}{{ column_left }} 
+<div id="content">
+
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+      	{% if (insert) %} 
+      		<a href="{{ insert }}" data-toggle="tooltip" title="{{ t('Add') }}" class="btn btn-primary"><i class="fa fa-plus"></i> {{ t('Add') }}</a>
+      	{% endif %}
+      		
+				<button type="submit" form="form-input" formaction="{{ update_list }}" data-toggle="tooltip" title="{{ t('Update') }}" class="btn btn-primary"><i class="fa fa-pencil"></i> {{ t('Update') }}</button>
+				<button type="submit" form="form-input" data-toggle="tooltip" title="{{ t('button_delete') }}" class="btn btn-danger"><i class="fa fa-trash-o"></i> {{ t('button_delete') }}</button>
+      </div>
+      <h1><i class="fa fa-puzzle-piece"></i> {{ t('Task Scheduler') }}</h1>
+      {{ ka_breadcrumbs }} 
+    </div>
+  </div>
+
+  <div class="container-fluid">
+  	{{ ka_top }} 
+
+		<div class="panel panel-default">
+		<div class="panel-body">
+
+      <table class="table table-bordered table-hover">
+        <tr>
+          <td>Last Scheduler Start:</td>
+          <td>{{ last_scheduler_run }}</td>
+        </tr>
+        <tr>
+          <td>Manual Start:</td>
+          <td><a href="{{ run_scheduler }}" target="_blank">Go</a></td>
+        </tr>
+      </table>
+      <br />
+
+      <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-input">
+      	<div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+              <td class="left" width="40%">
+                {% if (params['sort'] == 'ct.name') %} 
+                  <a href="{{ sort_name }}" class="{{ params['order']|lower }}">Name</a>
+                {% else %} 
+                  <a href="{{ sort_name }}">Name</a>
+                {% endif %}</td>
+                
+              <td class="left">
+                Last Start
+              </td>
+              <td class="left">
+                Status
+              </td>
+              <td class="left">
+                Completions
+              </td>
+              <td class="left">
+                Active
+              </td>              
+              <td class="right">
+                {% if (params['sort'] == 'ct.priority') %} 
+                  <a href="{{ sort_priority }}" class="{{ params['order']|lower }}">Priority</a>
+                {% else %} 
+                  <a href="{{ sort_priority }}">Priority</a>
+                {% endif %}</td>
+              <td class="right">Action</td>
+            </tr>
+          </thead>
+          
+          <tbody>
+            {% if (tasks is not empty) %} 
+            {% for t in tasks %} 
+            <tr>
+              <td style="text-align: center;">{% if (t['selected']) %} 
+                <input type="checkbox" name="selected[]" value="{{ t['task_id'] }}" checked="checked" />
+                {% else %} 
+                <input type="checkbox" name="selected[]" value="{{ t['task_id'] }}" />
+                {% endif %}</td>
+              <td class="left">{{ t['name'] }}</td>
+              
+              <td class="left">
+                <a href="{{ t['stat_link'] }}">{{ t['last_start'] }}</a>
+              </td>              
+              <td class="left">
+          		{% include 'extension/ka_extensions/common/select.twig' with {'options': statuses, 'value': t['status']} %}
+              </td>
+              <td class="left">
+                {{ t['complete_count'] }} 
+              </td>
+              <td class="left">
+                 <input type="checkbox" name="tasks[{{ t['task_id'] }}][active]" value="Y" {% if (t['active'] == 'Y') %} checked="checked" {% endif %} />
+              </td>
+
+              <td class="right">
+                <input class="form-control" type="text" size="6" name="tasks[{{ t['task_id'] }}][priority]" value="{{ t['priority'] }}" />
+              </td>
+              <td class="right">
+                {% for action in t['action'] %} 
+                  [ <a href="{{ action['href'] }}">{{ action['text'] }}</a> ]
+                {% endfor %}</td>
+            </tr>
+            {% endfor %} 
+            {% else %} 
+            <tr>
+              <td class="center" colspan="8">{{ text_no_results }}</td>
+            </tr>
+            {% endif %} 
+          </tbody>
+        </table>
+        </div>
+      </form>
+        <div class="row">
+          <div class="col-sm-6 text-left">{{ pagination }}</div>
+        </div>
+    </div>    
+    </div>
+    
+  </div>
+</div>
+{{ footer }}

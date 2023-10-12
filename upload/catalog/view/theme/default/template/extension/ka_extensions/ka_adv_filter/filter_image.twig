@@ -1,0 +1,47 @@
+{#
+    $Project: Advanced Filter $
+    $Author: karapuz team <support@ka-station.com> $
+    $Version: 1.0.1.2 $ ($Revision: 60 $)
+#}
+{% if not was_filter_image_shown %}
+<style>
+.filter-image {
+	width: 32px;
+	margin: 7px;
+	border: 1px solid #aaa;
+	box-sizing: content-box;
+}
+
+.filter-image.active {
+	margin: 5px;
+	border: 3px solid #539ad0;
+}
+</style>
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('.filter-group-values .filter-image').on('click', function() {
+		var el = $(this);
+		
+		var related_id = $(el).data('related-id');
+		
+		if (el.hasClass('active')) {
+			el.removeClass("active");
+			$('#' + related_id).prop('checked', false);
+		} else {
+			el.addClass("active");
+			$('#' + related_id).prop('checked', true);
+		}	
+	});
+});
+//--></script>
+{% endif %}
+
+<div class="list-group-item">
+  <div id="filter-group{{ filter_group['filter_group_id'] }}" class="filter-group-values">
+    {% for filter in filter_group['filter'] %} 
+    		<img data-related-id="input-filter-value-{{ filter.filter_id }}" class="filter-image {% if filter.filter_id in filter_category %} active{% endif %}" src="{{ filter['image'] }}" alt="{{ filter['name'] }}" title="{{ filter['name'] }}" />
+    		<input id="input-filter-value-{{ filter.filter_id }}" type="checkbox" style="display: none;" name="filter[]" value="{{ filter['filter_id'] }}" {% if filter.filter_id in filter_category %} checked="checked" {% endif %} />
+    {% endfor %} 
+  </div>
+</div>

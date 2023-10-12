@@ -265,6 +265,25 @@ var cart = {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 			}
 		});
+	},
+	'checkproduct': function(key) {
+		let selectedProductCheckbox = $('input[name=product-check]:checked');
+		if($(selectedProductCheckbox).length <= 0) {
+			selectedProductCheckbox = $('input[name=product-check]');
+		}
+
+		let totalPrice = 0;
+		$(selectedProductCheckbox).each(function() {
+			let price = $(this).data('price');
+			price = price.replace(/\D/g,'');
+			price = parseFloat(price);
+			if(price) {
+				totalPrice += price / 100;
+			}
+		});
+
+		console.log("$" + totalPrice.toFixed(2));
+		$("td.total-price").html("$" + totalPrice.toFixed(2));
 	}
 }
 

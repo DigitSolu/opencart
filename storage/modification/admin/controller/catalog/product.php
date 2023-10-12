@@ -343,6 +343,11 @@ class ControllerCatalogProduct extends Controller {
 		$data['add'] = $this->url->link('catalog/product/add', 'user_token=' . $this->session->data['user_token'] . $url, true);
 		$data['copy'] = $this->url->link('catalog/product/copy', 'user_token=' . $this->session->data['user_token'] . $url, true);
 		$data['delete'] = $this->url->link('catalog/product/delete', 'user_token=' . $this->session->data['user_token'] . $url, true);
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {		
+			$data['fill_filters'] = $this->url->link('extension/ka_extensions/ka_adv_filters/product/fill_filters', 'user_token=' . $this->session->data['user_token'] . $url, true);
+		}
+///karapuz (Advanced Filter)
 
 		$data['products'] = array();
 
@@ -514,6 +519,11 @@ class ControllerCatalogProduct extends Controller {
 	}
 
 	protected function getForm() {
+//karapuz (Ka Extensions platform) 
+		if (class_exists('\KaGlobal')) {
+			$data['ka_extensions_enable_data_lang'] = $this->config->get('ka_extensions_enable_data_lang');
+		}
+///karapuz (Ka Extensions platform)
 		$data['text_form'] = !isset($this->request->get['product_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
 
 		if (isset($this->error['warning'])) {

@@ -67,6 +67,23 @@ class ModelCatalogProduct extends Model {
 			}
 
 			if (!empty($data['filter_filter'])) {
+//karapuz (Advanced Filter) 
+				if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+				
+					$sql  .=  " LEFT  JOIN `" . DB_PREFIX . "product`  p  ON  ( p2c.product_id  =  p.product_id ) "; 
+				
+					$kamodel_ka_adv_filters_common = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/common');
+					$filter_groups = $kamodel_ka_adv_filters_common->getFiltersByGroups($data['filter_filter']);
+					if (!empty($filter_groups)) {
+						foreach($filter_groups as $fk => $fg) {
+							$tbl = "pf" . $fk;
+							$sql .= " INNER JOIN " . DB_PREFIX . "product_filter  $tbl  ON  ( p.product_id  =  $tbl.product_id  AND  $tbl.filter_id  IN  ( " . implode( ',' , $fg) . " ) )";
+						}
+					}
+					$data['filter_filter'] = '';
+					
+				} else
+///karapuz (Advanced Filter)
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
 			} else {
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
@@ -75,6 +92,27 @@ class ModelCatalogProduct extends Model {
 			$sql .= " FROM " . DB_PREFIX . "product p";
 		}
 
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+			if (!empty($data['filter_price_range']['min']) || !empty($data['filter_price_range']['max'])) {
+				$price_cond = array();
+				if (!empty($data['filter_price_range']['min'])) {
+					$price_cond[] = "kpc.price >= '" . $data['filter_price_range']['min'] . "'";
+				}
+				if (!empty($data['filter_price_range']['max'])) {
+					$price_cond[] = "kpc.price <= '" . $data['filter_price_range']['max'] . "'";
+				}
+				
+				$price_cond[] = "kpc.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'";
+				$price_cond[] = "kpc.geo_zone_id = '" . (int)$this->tax->getGeoZoneId() . "'";
+				
+				if (!empty($price_cond)) {
+					$sql .= " INNER JOIN " . DB_PREFIX . "ka_price_cache kpc ON p.product_id = kpc.product_id ";
+					$sql .= " AND (" . implode(' AND ', $price_cond) . ")";
+				}
+			}
+		}
+///karapuz (Advanced Filter)
 		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
 		if (!empty($data['filter_category_id'])) {
@@ -470,6 +508,23 @@ class ModelCatalogProduct extends Model {
 			}
 
 			if (!empty($data['filter_filter'])) {
+//karapuz (Advanced Filter) 
+				if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+				
+					$sql  .=  " LEFT  JOIN `" . DB_PREFIX . "product`  p  ON  ( p2c.product_id  =  p.product_id ) "; 
+				
+					$kamodel_ka_adv_filters_common = $this->load->kamodel('extension/ka_extensions/ka_adv_filter/common');
+					$filter_groups = $kamodel_ka_adv_filters_common->getFiltersByGroups($data['filter_filter']);					
+					if (!empty($filter_groups)) {
+						foreach($filter_groups as $fk => $fg) {
+							$tbl = "pf" . $fk;
+							$sql .= " INNER JOIN " . DB_PREFIX . "product_filter  $tbl  ON  ( p.product_id  =  $tbl.product_id  AND  $tbl.filter_id  IN  ( " . implode( ',' , $fg) . " ) )";
+						}
+					}
+					$data['filter_filter'] = '';
+					
+				} else
+///karapuz (Advanced Filter)
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
 			} else {
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
@@ -478,6 +533,27 @@ class ModelCatalogProduct extends Model {
 			$sql .= " FROM " . DB_PREFIX . "product p";
 		}
 
+//karapuz (Advanced Filter) 
+		if (class_exists('\KaGlobal') && \KaGlobal::isKaInstalled('ka_adv_filter')) {
+			if (!empty($data['filter_price_range']['min']) || !empty($data['filter_price_range']['max'])) {
+				$price_cond = array();
+				if (!empty($data['filter_price_range']['min'])) {
+					$price_cond[] = "kpc.price >= '" . $data['filter_price_range']['min'] . "'";
+				}
+				if (!empty($data['filter_price_range']['max'])) {
+					$price_cond[] = "kpc.price <= '" . $data['filter_price_range']['max'] . "'";
+				}
+				
+				$price_cond[] = "kpc.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'";
+				$price_cond[] = "kpc.geo_zone_id = '" . (int)$this->tax->getGeoZoneId() . "'";
+				
+				if (!empty($price_cond)) {
+					$sql .= " INNER JOIN " . DB_PREFIX . "ka_price_cache kpc ON p.product_id = kpc.product_id ";
+					$sql .= " AND (" . implode(' AND ', $price_cond) . ")";
+				}
+			}
+		}
+///karapuz (Advanced Filter)
 		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
 		if (!empty($data['filter_category_id'])) {

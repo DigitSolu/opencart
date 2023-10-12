@@ -32,6 +32,13 @@ class ControllerCommonHeader extends Controller {
 		$data['base'] = $server;
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
+//karapuz (Ka Extensions platform) 
+		if (class_exists('\KaGlobal')) {
+			$this->document->addScript('catalog/view/javascript/extension/ka_extensions/common.js');
+			$this->document->addStyle('catalog/view/javascript/extension/ka_extensions/stylesheet.css');
+			$data['ka_meta'] = $this->document->getKaMeta();
+		}
+///karapuz (Ka Extensions platform)
 		$data['links'] = $this->document->getLinks();
 		$data['styles'] = $this->document->getStyles();
 		$data['scripts'] = $this->document->getScripts('header');

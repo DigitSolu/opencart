@@ -73,6 +73,25 @@ class ControllerCommonFooter extends Controller {
 		$data['scripts'] = $this->document->getScripts('footer');
 		$data['styles'] = $this->document->getStyles('footer');
 		
+//karapuz (Ka Extensions platform) 
+		if (!defined('KA_DISABLE_FORM_VALIDATION')) {
+			$data['ka_enable_form_validation'] = true;
+			
+			$this->load->language('extension/ka_extensions/common');
+			
+			$labels = array(
+				'txt_warning' => $this->language->get('txt_warning'),
+				'txt_error'   => $this->language->get('txt_error'),
+				'txt_success' => $this->language->get('txt_success'),
+				'txt_info'    => $this->language->get('txt_info'),
+				'txt_field_validation_error' => $this->language->get('txt_field_validation_error'),
+			);
+				
+			$this->document->addKaJsLables($labels);
+		}
+		
+		$data['ka_js_labels'] = $this->document->getKaJsLabels();
+///karapuz (Ka Extensions platform)
 		return $this->load->view('common/footer', $data);
 	}
 }

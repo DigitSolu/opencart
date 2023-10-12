@@ -1,0 +1,207 @@
+{#
+    $Project: Advanced Filter $
+    $Author: karapuz team <support@ka-station.com> $
+    $Version: 1.0.1.2 $ ($Revision: 60 $)
+#}
+
+<style>
+#price-range-slider {
+	margin-left: 6px;
+	margin-right: 6px;
+	margin-top: 15px;
+	margin-bottom: 45px;
+}
+	
+.price-range .col-sm-6 {
+  padding:6px;
+}
+
+.price-range .input-group input[type=text] {
+  padding:4px;  
+}
+</style>
+<script type="text/javascript"><!--
+var price_range_slider;
+var active_price_element = '';
+var price_from = '{{ ka_price_from }}';
+var price_to = '{{ ka_price_to }}';
+var min_price = '{{ ka_min_price }}';
+var max_price = '{{ ka_max_price }}';
+
+function ka_round_price(price) {
+	return Math.round(price * 100) / 100;
+}
+
+$(document).ready(function() {
+	{%if show_ruler %}
+		price_range_slider = document.getElementById('price-range-slider');
+		noUiSlider.create(price_range_slider, {
+			start: [price_from, price_to],
+			connect: true,
+			step: {{ ka_price_step|default(1) }},
+			tooltips: [ true, true],
+			range: {
+				'min': [ {{ ka_min_price }}],
+				'max': [ {{ ka_max_price }}],
+			}
+		});
+		
+		price_range_slider.noUiSlider.on('change', function(values, handle) {
+			console.log('slider change');
+			active_price_element = 'slider';
+			if (handle == 0) {
+				 price_from = values[0];
+			} else {
+				price_to = values[1];
+			}
+			
+			onPriceIntervalUpdate();
+		});
+
+		$('#price_from').on('change', function() {
+			console.log('input from change');
+		
+			active_price_element = '';
+			
+			price_from = parseFloat($('#price_from').val());
+			
+			if (Number.isNaN(price_from) || price_from < min_price) {
+				price_from = min_price;
+			}
+			
+			if (price_from > price_to) {
+				price_from = price_to;
+			}
+			
+			onPriceIntervalUpdate();
+		});
+		
+		$('#price_to').on('change', function() {
+			console.log('input to change');
+		
+			active_price_element = '';
+			
+			price_to = parseFloat($('#price_to').val());
+			
+			if (Number.isNaN(price_to) || price_to > max_price) {
+				price_to = max_price;
+			}
+			
+			if (price_to < price_from) {
+				price_to = price_from;
+			}
+			
+			onPriceIntervalUpdate();
+		});	
+	{% endif %}
+	
+	$('input[name=price_interval_radio]').on('change', function() {
+		active_price_element = 'radio';
+		
+		var self = this;
+	
+		var price_interval = String(self.value).split("|");
+	
+		price_from = price_interval[0];
+		price_to = price_interval[1];
+		
+		onPriceIntervalUpdate();
+	});	
+
+	$('select[name=price_interval_select]').on('change', function() {
+		active_price_element = 'select';
+		
+		var self = this;
+	
+		var price_interval = String(self.value).split("|");
+		
+		price_from = price_interval[0];
+		price_to = price_interval[1];
+		
+		onPriceIntervalUpdate();
+	});
+});
+
+function onPriceIntervalUpdate() {
+	console.log('price_interval update');
+
+	price_from = ka_round_price(price_from);
+	price_to = ka_round_price(price_to);
+	
+	// update input
+	if (active_price_element != 'input') {
+		$('#price_from').val(price_from);
+		$('#price_to').val(price_to);
+	}
+
+	// update slider
+	//
+	if (price_range_slider) {
+		if (active_price_element != 'slider') {
+			price_range_slider.noUiSlider.updateOptions(
+				{
+					start: [price_from, price_to],
+				},
+				true
+			);
+		}
+	}
+	
+	// update radio
+	if (active_price_element != 'radio') {
+		$('input[name=price_interval_radio]').attr('checked', false);
+	}
+	
+	// update select
+	if (active_price_element != 'select') {
+		$('select[name=price_interval_select]').val('');
+	}
+}
+
+--></script> 	
+
+	<a class="list-group-item price-range">{{ text_price }} {% if is_price_range_wo_taxes %}<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ text_no_taxes_search }}"></i>{% endif %}</a>
+	<div class="list-group-item price-range">
+		{%if show_ruler %}
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon">{{ text_from }}</span>
+						<input id="price_from" name="price_from" type="text" class="form-control" placeholder="{{ ka_min_price }}" {%if ka_price_from != ka_min_price %} value="{{ ka_price_from }}" {% endif %} autocomplete="off" />
+					</div> 		
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon">{{ text_to }}</span>
+						<input id="price_to" name="price_to" type="text" class="form-control" placeholder="{{ ka_max_price }}" {%if ka_price_to != ka_max_price %} value="{{ ka_price_to }}" {% endif %} autocomplete="off" />
+					</div> 		
+				</div>
+			</div>
+			<div id="price-range-slider"></div>
+		{% else %}
+			<input id="price_from" name="price_from" type="hidden" {%if ka_price_from != ka_min_price %} value="{{ ka_price_from }}" {% endif %} />
+			<input id="price_to" name="price_to" type="hidden" {%if ka_price_to != ka_max_price %} value="{{ ka_price_to }}" {% endif %} />
+		{% endif %}
+		
+		{%if show_radio %}
+			{% for interval in ka_price_intervals %}
+				<div class="radio">
+					<label>
+						<input type="radio" name="price_interval_radio" {%if interval.selected %} checked="checked" {% endif %}  value="{{ interval.from }}|{{ interval.to }}" />
+						{{ interval.text }}
+					</label>
+				</div>
+			{% endfor %}
+		{% endif %}
+			
+		{%if show_select %}
+			<div class="form-group">
+				<select class="form-control" name="price_interval_select" autocomplete="off">
+					<option value=""></option>
+					{% for interval in ka_price_intervals %}
+						<option {%if interval.selected %} selected="selected" {% endif %} value="{{ interval.from }}|{{ interval.to }}">{{ interval.text }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		{% endif %}
+	</div>
