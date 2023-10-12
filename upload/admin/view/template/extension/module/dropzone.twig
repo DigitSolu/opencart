@@ -1,0 +1,209 @@
+{% if view == 'settings' %}
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="module_dropzone_status" id="input-status" class="form-control">
+                {% if module_dropzone_status %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-max"><span data-toggle="tooltip" title="{{ help_max }}">{{ entry_max }}</span></label>
+						<div class="col-sm-10">
+							<input type="text" name="module_dropzone_max" value="{{ module_dropzone_max }}" placeholder="{{ entry_max }}" id="input-max" class="form-control">
+						</div>
+					</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
+{% endif %}
+{% if view == 'product_form' %}
+<div id="dz-preview" class="hidden">
+	<div class="col-sm-3">
+		<div class="dz-preview dz-file-preview panel panel-default">
+			<div class="panel-heading">
+				<div class="panel-title dz-details clearfix"><div class="dz-name" data-dz-name></div><div class="dz-size" data-dz-size></div></div>
+			</div>
+			<div class="panel-body">
+				<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+				<div class="dz-thumbnail">
+					<img data-dz-thumbnail />
+				</div>
+				<div class="dz-mark"><i class="fa fa-spin fa-spinner"></i></div>
+				<div class="dz-trash"><i class="fa fa-trash" title="{{ button_delete }}" data-dz-remove></i></div>
+			</div>
+			<div class="panel-footer clearfix"></div>
+		</div>
+	</div>
+</div>
+<link href="view/javascript/dropzone/custom.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/dropzone/dropzone.min.js"></script>
+<script type="text/javascript" src="view/javascript/jquery/jquery-ui/jquery-ui-sortable.min.js"></script>
+<script type="text/javascript"><!--
+var html = '<div class="dz-wrapper">';
+html += 		'<div class="row">';
+html += 			'<div class="col-sm-9">';
+html += 				'<label class="col-sm-5 control-label">{{ text_upload_to }}</label><div class="col-sm-7"><input id="dz-folder-name" placeholder="{{ entry_folder }}" class="form-control" value="' + getURLVar('product_id') + '" /></div>';
+html += 			'</div>';
+html += 			'<div class="col-sm-3 text-right">';
+html += 				'<a id="dz-clear" class="btn btn-danger" style="display: none;"><i class="fa fa-trash"></i> {{ button_clear }}</a>';
+html += 			'</div>';
+html +=			'</div>';
+html += 		'<div id="dz-element" class="dropzone dz-sortable clearfix">';
+html += 			'<div class="dz-message" data-dz-message>';
+html += 				'<div class="dz-icon-wrapper"><i class="fa fa-cloud-upload"></i></div>';
+html += 				'<div class="dz-text-wrapper">{{ text_message }}</div>';
+html += 			'</div>';
+html += 		'</div>';
+html += 	'</div>';
+$('#tab-image').prepend(html);
+$('.dz-sortable').sortable();
+function sort() {
+	var old_length = $('#images [name^="product_image"][name$="[image]"]').length;
+	var new_length = $('.dz-sort-order[name]').length;
+	for (i = old_length; i < old_length + new_length; i++) {
+		var eq = i - old_length;
+		$('.dz-sort-order[name]').eq(eq).val(i);
+	}
+}
+function changed(dz) {
+	if (dz.files.length) {
+		$('#dz-clear').fadeIn();
+		$('#dz-folder-name').prop({
+			disabled: true,
+			readonly: true
+		});
+	} else {
+		$('#dz-clear').fadeOut();
+		$('#dz-folder-name').prop({
+			disabled: false,
+			readonly: false
+		});
+	}
+}
+Dropzone.autoDiscover = false;
+var counter = $('#images [name^="product_image"][name$="[image]"]').length;
+var dz = new Dropzone(
+	'#dz-element',
+	{
+		url: 'index.php?route=extension/module/dropzone/upload&user_token=' + getURLVar('user_token') + '&product_id=' + getURLVar('product_id') + '&folder_name=' + $('#dz-folder-name').val(),
+		previewTemplate: $('#dz-preview').html(),
+		maxFilesize: {{ max_size }},
+		acceptedFiles: 'image/jpeg,image/pjpeg,image/png,image/x-png,image/gif',
+		timeout: 0,
+		thumbnailWidth: null,
+		thumbnailHeight: null,
+		init: function() {
+			this.on('addedfile', function(file) {
+				changed(dz);
+			});
+			this.on('removedfile', function(file) {
+				sort();
+				changed(dz);
+				if (!$('.dz-main-selector.label-success').length) {
+					$('#input-image').attr('name', 'image');
+					$('#thumb-image img').attr('src', '{{ thumb }}');
+				}
+			});
+			this.on('error', function(file, error) {
+				$(file.previewElement).find('.dz-preview').addClass('dz-error').find('.dz-mark').html('<i class="fa fa-times-circle" title="' + error + '"></i>');
+				$(file.previewElement).find('.panel-footer').text(error);
+			});
+			this.on('success', function(file, response) {
+				if (response['error']) {
+					$(file.previewElement).find('.dz-preview').addClass('dz-error').find('.dz-mark').html('<i class="fa fa-times-circle" title="' + response['error'] + '"></i>');
+				}
+				if (response['success']) {
+					$(file.previewElement).find('.dz-preview').addClass('dz-success').find('.dz-mark').html('<i class="fa fa-check-circle" title="' + response['success'] + '"></i>');
+					$(file.previewElement).find('.panel-footer').append('<label class="dz-main-selector label label-default">{{ entry_main_image }}</label><input class="input-image" type="hidden" name="product_image[' + counter + '][image]" value="' + response['image'] + '" /><input class="dz-sort-order" type="text" name="product_image[' + counter + '][sort_order]" placeholder="{{ entry_sort_order }}" value="" />');
+					counter++;
+				}
+			});
+			this.on('queuecomplete', function(file, response) {
+				sort();
+				$('.dz-sortable').sortable({
+					opacity: 0.8,
+					update: function(event, ui) {
+						sort();
+					}
+				});
+				if ($('#input-image').val() == '' && !$('.dz-main-selector.label-success').length) {
+					$('.dz-main-selector:first').trigger('click');
+				}
+			});
+		}
+	}
+);
+$('#dz-clear').on('click', function() {
+	dz.removeAllFiles(true);
+});
+$('#dz-folder-name').on('change', function() {
+	dz.options.url = 'index.php?route=extension/module/dropzone/upload&user_token=' + getURLVar('user_token') + '&product_id=' + getURLVar('product_id') + '&folder_name=' + $('#dz-folder-name').val();
+});
+$(document).on('click', '.dz-main-selector', function() {
+	var element = $(this);
+	element.toggleClass('label-default label-success');
+	$('.dz-main-selector').not(element).removeClass('label-success').addClass('label-default');
+	$('.dz-main-selector').each(function() {
+		var label = $(this);
+		var preview = label.parents('.dz-preview');
+		var image_input = preview.find('.input-image');
+		var sort_order_input = preview.find('.dz-sort-order');
+		if (label.hasClass('label-success')) {
+			image_input.attr({
+				'data-name': image_input.attr('name'),
+				name: 'image'
+			});
+			sort_order_input.attr('data-name', sort_order_input.attr('name')).removeAttr('name').hide();
+		} else {
+			image_input.attr('name', image_input.data('name'));
+			sort_order_input.attr('name', sort_order_input.data('name')).show();
+		}
+	});
+	if ($('.dz-main-selector.label-success').length) {
+		$('#input-image').removeAttr('name')
+		$('#thumb-image img').attr('src', element.parents('.dz-preview').find('[data-dz-thumbnail]').attr('src')).css('max-width', 100);
+	} else {
+		$('#input-image').attr('name', 'image');
+		$('#thumb-image img').attr('src', '{{ thumb }}');
+	}
+	sort();
+});
+//--></script>
+{% endif %}

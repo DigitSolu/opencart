@@ -144,6 +144,33 @@
           </div>
           <div class="panel-body">
             <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-product">
+
+							<div class="well">
+					<div class="row">
+						<div class="col-sm-4">
+							<label class="control-label" for="input-status">{{ entry_status }}</label>
+							<select name="status" id="input-status" class="form-control">
+							  <option value="*">{{ text_select }}</option>
+							  <option value="1">{{ text_enabled }}</option>
+							  <option value="0">{{ text_disabled }}</option>
+							</select>
+						</div>
+					
+						<div class="col-sm-4">
+							<label class="control-label" for="input-category">{{ entry_category }}</label>
+							<select name="category_id" id="input-category" class="form-control">
+							  <option value="*">{{ text_select }}</option>
+							  {% for category in categories %}
+							  <option value="{{ category.category_id }}">{{ category.name }}</option>
+							  {% endfor %}
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<button type="button" class="btn btn-primary pull-right multiplsstatus" style="margin-top:16px;">{{ button_quickupdate }}</button>
+						</div>
+					</div>
+				</div>
+				
               <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                   <thead>
@@ -177,7 +204,21 @@
                       {{ product.price }}
                       {% endif %}</td>
                     <td class="text-right">{% if product.quantity <= 0 %} <span class="label label-warning">{{ product.quantity }}</span> {% elseif product.quantity <= 5 %} <span class="label label-danger">{{ product.quantity }}</span> {% else %} <span class="label label-success">{{ product.quantity }}</span> {% endif %}</td>
-                    <td class="text-left">{{ product.status }}</td>
+                    
+			<td class="text-left">
+				{% if product.status != 'Disabled' %}
+					<label class="switch">
+						<input type="checkbox" checked class="statusenabled" rel="{{ product.product_id }}">
+						<span class="slider round"></span>
+					</label>
+				{% else %}
+					<label class="switch">
+						<input type="checkbox" class="statusenabled" rel="{{ product.product_id }}">
+						<span class="slider round"></span>
+					</label>
+				{% endif %}
+			</td>
+				
                     <td class="text-right"><a href="{{ product.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                   </tr>
                   {% endfor %}
@@ -288,4 +329,118 @@ $('input[name=\'filter_model\']').autocomplete({
 	{% include 'extension/ka_extensions/ka_adv_filter/filter_rebuild_product.twig' %}
 {% endif %}
 {# ///karapuz (Advanced Filter) #}
+
+				<script type="text/javascript">
+					$(document).on('click', '.statusenabled',function(){
+						rel=$(this).attr('rel');
+
+						$.ajax({
+						url: 'index.php?route=catalog/product/quickStatus&user_token={{ user_token }}&product_id='+rel+'',
+						type: 'post',
+						data: '',
+						dataType:'json',
+						   beforeSend: function() {
+							$('.statusenabled').button('loading');
+						  },
+						  complete: function() {
+							$('.statusenabled').button('reset');
+							location.reload(true); 
+						  },
+						  success: function(json) {
+						   $('.alert, .text-danger').remove();      
+							if (json['success']) {
+								$('.breadcrumb').after('<div class="alert alert-success alert-dismissible"> <i style="font-size:14px; " class="fa fa-thumbs-up" aria-hidden="true"></i>' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+								$('html, body').animate({ scrollTop: 0 }, 'slow');
+							}
+						  }
+					  });
+					});
+					</script>
+
+					<script type="text/javascript">
+					$(document).on('click', '.multiplsstatus',function(){
+						$.ajax({
+						url: 'index.php?route=catalog/product/Multiplestatus&user_token={{ user_token }}',
+						type: 'post',
+						dataType:'json',
+						data: $('#form-product select, #form-product input[type=\'checkbox\']:checked'),
+						beforeSend: function() {
+							$('.multiplsstatus').button('loading');
+						},
+						complete: function() {
+							$('.multiplsstatus').button('reset');
+							location.reload(true);
+						},
+						  success: function(json) {
+						   $('.alert, .text-danger').remove();      
+							if (json['success']) {
+								$('.breadcrumb').after('<div class="alert alert-success alert-dismissible"> <i style="font-size:14px; " class="fa fa-thumbs-up" aria-hidden="true"></i>' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+								$('html, body').animate({ scrollTop: 0 }, 'slow');
+							}
+						  }
+					  });
+					});
+					</script>
+					<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+				
 {{ footer }} 

@@ -349,6 +349,10 @@ class ControllerCatalogProduct extends Controller {
 		}
 ///karapuz (Advanced Filter)
 
+
+			$this->load->model('catalog/category');
+			$data['categories'] = $this->model_catalog_category->getCategories();
+			
 		$data['products'] = array();
 
 		$filter_data = array(
@@ -1276,6 +1280,41 @@ class ControllerCatalogProduct extends Controller {
 		return !$this->error;
 	}
 
+
+            public function quickStatus() {
+				$json = array();
+				$this->load->model('catalog/product');
+				$this->load->language('catalog/product');
+				if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+
+					$this->model_catalog_product->QuickStatus($this->request->get['product_id']);
+					$json['success'] = $this->language->get('text_statussuccess');
+							
+				}                   
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+			}
+			
+			public function Multiplestatus() {
+				$json = array();
+				$this->load->language('catalog/product');
+
+				$this->document->setTitle($this->language->get('heading_title'));
+
+				$this->load->model('catalog/product');
+
+				if (isset($this->request->post['selected'])) {
+					foreach ($this->request->post['selected'] as $product_id) {
+						$this->model_catalog_product->MultiQuickStatus($product_id, $this->request->post);
+					}
+
+					$json['success'] = $this->language->get('text_success');
+				}
+
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+			}
+			
 	public function autocomplete() {
 		$json = array();
 

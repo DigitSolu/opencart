@@ -212,6 +212,9 @@ class ControllerCatalogCategory extends Controller {
 		foreach ($results as $result) {
 			$data['categories'][] = array(
 				'category_id' => $result['category_id'],
+
+				'status'        => $result['status'],
+			
 				'name'        => $result['name'],
 				'sort_order'  => $result['sort_order'],
 				'edit'        => $this->url->link('catalog/category/edit', 'user_token=' . $this->session->data['user_token'] . '&category_id=' . $result['category_id'] . $url, true),
@@ -251,6 +254,10 @@ class ControllerCatalogCategory extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
+
+				$data['sort_status'] = $this->url->link('catalog/category', 'user_token=' . $this->session->data['user_token'] . '&sort=status' . $url, true);
+				$data['user_token'] = $this->session->data['user_token'];
+			
 		$data['sort_name'] = $this->url->link('catalog/category', 'user_token=' . $this->session->data['user_token'] . '&sort=name' . $url, true);
 		$data['sort_sort_order'] = $this->url->link('catalog/category', 'user_token=' . $this->session->data['user_token'] . '&sort=sort_order' . $url, true);
 
@@ -592,6 +599,42 @@ class ControllerCatalogCategory extends Controller {
 		return !$this->error;
 	}
 
+
+            public function quickStatus() {
+				$json = array();
+				$this->load->model('catalog/category');
+				$this->load->language('catalog/category');
+				if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+
+					$this->model_catalog_category->QuickStatus($this->request->get['category_id']);
+					$json['success'] = $this->language->get('text_statussuccess');
+							
+				}                   
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+			}
+			
+			public function Multiplestatus() {
+				
+				$json = array();
+				$this->load->language('catalog/category');
+
+				$this->document->setTitle($this->language->get('heading_title'));
+
+				$this->load->model('catalog/category');
+
+				if (isset($this->request->post['selected'])) {
+					foreach ($this->request->post['selected'] as $category_id) {
+						$this->model_catalog_category->MultiQuickStatus($category_id, $this->request->post);
+					}
+
+					$json['success'] = $this->language->get('text_success');
+				}
+
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+			}
+			
 	public function autocomplete() {
 		$json = array();
 

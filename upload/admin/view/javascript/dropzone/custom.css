@@ -1,0 +1,110 @@
+.dropzone {
+    background-color: #fafafa;
+    border: 3px dashed #eee;
+    min-height: 160px;
+    margin: 15px 0 0;
+    text-align: center;
+    padding: 15px 0;
+	cursor: pointer;
+}
+.dz-wrapper {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #aaa;
+}
+.dz-image-preview .panel {
+    min-height: 240px;
+}
+.dz-preview {
+    background-color: #fff;
+    position: relative;
+}
+.dz-icon-wrapper {
+    font-size: 40px;
+}
+.dz-message {
+    display: none;
+}
+.dz-message:only-child {
+    display: block;
+    font-size: 16px;
+    padding-top: 20px;
+    color: #bbb;
+}
+.dz-progress .dz-upload {
+    position: absolute;
+    left: 0;
+    top: 0;
+	width: 0;
+    transition: 0.5s all;
+    height: 3px;
+    background-color: #4cb64c;
+}
+.dz-error .dz-upload {
+    background-color: #e3503e;
+}
+.dz-error .dz-mark .fa-times-circle {
+    color: #e3503e;
+}
+.dz-success .dz-mark .fa-check-circle {
+    color: #4cb64c;
+}
+.dz-mark i {
+    right: 5px;
+    top: calc(50% - 9px);
+    font-size: 18px;
+    position: absolute;
+}
+.dz-trash i {
+    position: absolute;
+    left: 5px;
+    cursor: pointer;
+    top: calc(50% - 9px);
+    font-size: 18px;
+    color: #e3503e;
+}
+.dz-main-selector {
+    cursor: pointer;
+    font-size: small;
+    float: left;
+    font-weight: normal;
+}
+.dz-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    float: left;
+    width: calc(100% - 80px);
+}
+.dz-size {
+    float: right;
+    width: 80px;
+    text-align: right;
+}
+.dz-error [data-dz-thumbnail] {
+    opacity: 0.3;
+}
+.dz-sort-order {
+    float: right;
+    width: 90px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+.dz-thumbnail {
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dz-preview .panel-footer {
+    min-height: 50px;
+}
+.dz-error .panel-footer {
+	padding: 5px;
+}
+.dz-thumbnail img {
+    max-height: 100%;
+    max-width: 100%;
+}

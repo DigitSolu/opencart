@@ -148,12 +148,22 @@ class ControllerAccountLogin extends Controller {
 			$data['password'] = '';
 		}
 
+
+		if ($this->config->get('module_facebook_login_status') && $this->config->get('module_facebook_login_facebook_app_id')) {
+			$data['facebook_app_id'] = $this->config->get('module_facebook_login_facebook_app_id');
+		} else {
+			$data['facebook_app_id'] = '';			
+		}
+		
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
+
+              $data['social_login'] = $this->load->controller('extension/module/social_login');
+        
 
 		$this->response->setOutput($this->load->view('account/login', $data));
 	}

@@ -79,6 +79,8 @@ class ControllerAccountReward extends Controller {
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
+		
+		$data['userid'] = $this->customer->getId();
 
 		$this->response->setOutput($this->load->view('account/reward', $data));
 	}

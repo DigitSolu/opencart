@@ -17,6 +17,10 @@ class ControllerAccountLogout extends Controller {
 			unset($this->session->data['voucher']);
 			unset($this->session->data['vouchers']);
 
+			unset($this->session->data['facebook_token']);
+			unset($this->session->data['google_token']);
+			
+
 			$this->response->redirect($this->url->link('account/logout', '', true));
 		}
 

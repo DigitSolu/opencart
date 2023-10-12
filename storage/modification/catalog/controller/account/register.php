@@ -217,6 +217,9 @@ class ControllerAccountRegister extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
+			$data['social_login'] = $this->load->controller('extension/module/social_login');
+			
+
 		$this->response->setOutput($this->load->view('account/register', $data));
 	}
 

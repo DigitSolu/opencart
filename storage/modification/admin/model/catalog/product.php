@@ -754,6 +754,33 @@ class ModelCatalogProduct extends Model {
 		return $query->row['total'];
 	}
 
+
+			public function QuickStatus($product_id, $data) {
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
+				if ($query->row['status'] == '0'){
+					$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '1' WHERE product_id = '" . (int)$product_id . "'");
+				} else{
+					$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '0' WHERE product_id = '" . (int)$product_id . "'");
+				}
+				
+				return $query->rows;
+			}
+			
+			public function MultiQuickStatus($product_id, $data) {
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
+				if($data['status'] != '*'){
+					if ($query->row['status'] == $data['status']){
+						$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '".$data['status']."' WHERE product_id = '" . (int)$product_id . "'");
+					} else{
+						$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '".$data['status']."' WHERE product_id = '" . (int)$product_id . "'");
+					}
+				}
+				if($data['category_id'] != 0){
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '".$data['category_id']."'");
+				}
+				return $query->row;
+			}
+			
 	public function getTotalProductsByLayoutId($layout_id) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 

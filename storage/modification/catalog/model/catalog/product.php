@@ -248,21 +248,21 @@ class ModelCatalogProduct extends Model {
 		$product_data = array();
 
 
-                // if(in_array(__FUNCTION__, array('getProductSpecials'))){
-                //     $data['filter_special'] = true;
-                // }
-                // if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
-                //     //d_ajax_filter
-                //     $this->load->model('extension/module/d_ajax_filter');
-                //     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
-                //     //d_ajax_filter
-                // }
-                // if(in_array(__FUNCTION__, array('getTotalProducts'))){
-                //     //d_ajax_filter
-                //     $this->load->model('extension/module/d_ajax_filter');
-                //     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilterForTotal($data, $sql);
-                //     //d_ajax_filter
-                // }
+                if(in_array(__FUNCTION__, array('getProductSpecials'))){
+                    $data['filter_special'] = true;
+                }
+                if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
+                    // //d_ajax_filter
+                    // $this->load->model('extension/module/d_ajax_filter');
+                    // $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
+                    // //d_ajax_filter
+                }
+                if(in_array(__FUNCTION__, array('getTotalProducts'))){
+                    // //d_ajax_filter
+                    // $this->load->model('extension/module/d_ajax_filter');
+                    // $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilterForTotal($data, $sql);
+                    // //d_ajax_filter
+                }
                 
 		$query = $this->db->query($sql);
 
@@ -315,21 +315,21 @@ class ModelCatalogProduct extends Model {
 		$product_data = array();
 
 
-                // if(in_array(__FUNCTION__, array('getProductSpecials'))){
-                //     $data['filter_special'] = true;
-                // }
-                // if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
-                //     //d_ajax_filter
-                //     $this->load->model('extension/module/d_ajax_filter');
-                //     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
-                //     //d_ajax_filter
-                // }
-                // if(in_array(__FUNCTION__, array('getTotalProducts'))){
-                //     //d_ajax_filter
-                //     $this->load->model('extension/module/d_ajax_filter');
-                //     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilterForTotal($data, $sql);
-                //     //d_ajax_filter
-                // }
+                if(in_array(__FUNCTION__, array('getProductSpecials'))){
+                    $data['filter_special'] = true;
+                }
+                if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
+                    // //d_ajax_filter
+                    // $this->load->model('extension/module/d_ajax_filter');
+                    // $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
+                    // //d_ajax_filter
+                }
+                if(in_array(__FUNCTION__, array('getTotalProducts'))){
+                    // //d_ajax_filter
+                    // $this->load->model('extension/module/d_ajax_filter');
+                    // $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilterForTotal($data, $sql);
+                    // //d_ajax_filter
+                }
                 
 		$query = $this->db->query($sql);
 
@@ -645,21 +645,21 @@ class ModelCatalogProduct extends Model {
 		}
 
 
-                // if(in_array(__FUNCTION__, array('getProductSpecials'))){
-                //     $data['filter_special'] = true;
-                // }
-                // if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
-                //     //d_ajax_filter
-                //     $this->load->model('extension/module/d_ajax_filter');
-                //     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
-                //     //d_ajax_filter
-                // }
-                // if(in_array(__FUNCTION__, array('getTotalProducts'))){
-                //     //d_ajax_filter
-                //     $this->load->model('extension/module/d_ajax_filter');
-                //     $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilterForTotal($data, $sql);
-                //     //d_ajax_filter
-                // }
+                if(in_array(__FUNCTION__, array('getProductSpecials'))){
+                    $data['filter_special'] = true;
+                }
+                if(in_array(__FUNCTION__, array('getProducts', 'getProductSpecials'))){
+                    // //d_ajax_filter
+                    // $this->load->model('extension/module/d_ajax_filter');
+                    // $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilter($data, $sql);
+                    // //d_ajax_filter
+                }
+                if(in_array(__FUNCTION__, array('getTotalProducts'))){
+                    // //d_ajax_filter
+                    // $this->load->model('extension/module/d_ajax_filter');
+                    // $sql = $this->model_extension_module_d_ajax_filter->prepareAjaxFilterForTotal($data, $sql);
+                    // //d_ajax_filter
+                }
                 
 		$query = $this->db->query($sql);
 
