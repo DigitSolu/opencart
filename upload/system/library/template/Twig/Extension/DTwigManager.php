@@ -6,7 +6,25 @@
  * This class is used by Opencart as a twig extension and must not be used directly.
  *
  */
-class Twig_Extension_DTwigManager extends Twig_Extension
+
+if (class_exists('\Twig\Extension\AbstractExtension')) {
+    class_alias('\Twig\Extension\AbstractExtension', 'TwigExtension');
+} else {
+    class_alias('Twig_Extension', 'TwigExtension');
+}
+
+if (class_exists('\Twig\TwigFilter')) {
+    class_alias('\Twig\TwigFilter', 'TwigSimpleFilter');
+} else {
+    class_alias('Twig_SimpleFilter', 'TwigSimpleFilter');
+}
+
+if (class_exists('\Twig\TwigFunction')) {
+    class_alias('\Twig\TwigFunction', 'TwigSimpleFunction');
+} else {
+    class_alias('Twig_SimpleFunction', 'TwigSimpleFunction');
+}
+class Twig_Extension_DTwigManager extends TwigExtension
 {
     protected $registry;
     protected $is_admin;
@@ -27,17 +45,17 @@ class Twig_Extension_DTwigManager extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('link', array($this, 'linkFunction')),
-            new \Twig_SimpleFunction('lang', array($this, 'langFunction')),
-            new \Twig_SimpleFunction('config', array($this, 'configFunction')),
-            new \Twig_SimpleFunction('paginate', array($this, 'paginateFunction')),
-            new \Twig_SimpleFunction('image', array($this, 'imageFunction')),
-            new \Twig_SimpleFunction('asset', array($this, 'assetFunction')),
-            new \Twig_SimpleFunction('load', array($this, 'loadFunction')),
-            new \Twig_SimpleFunction('can_access', array($this, 'canAccessFunction')),
-            new \Twig_SimpleFunction('can_modify', array($this, 'canModifyFunction')),
-            new \Twig_SimpleFunction('template', array($this, 'templateFunction')),
-            new \Twig_SimpleFunction('content', array($this, 'contentFunction')),
+            new \TwigSimpleFunction('link', array($this, 'linkFunction')),
+            new \TwigSimpleFunction('lang', array($this, 'langFunction')),
+            new \TwigSimpleFunction('config', array($this, 'configFunction')),
+            new \TwigSimpleFunction('paginate', array($this, 'paginateFunction')),
+            new \TwigSimpleFunction('image', array($this, 'imageFunction')),
+            new \TwigSimpleFunction('asset', array($this, 'assetFunction')),
+            new \TwigSimpleFunction('load', array($this, 'loadFunction')),
+            new \TwigSimpleFunction('can_access', array($this, 'canAccessFunction')),
+            new \TwigSimpleFunction('can_modify', array($this, 'canModifyFunction')),
+            new \TwigSimpleFunction('template', array($this, 'templateFunction')),
+            new \TwigSimpleFunction('content', array($this, 'contentFunction')),
         );
     }
 
@@ -302,13 +320,13 @@ class Twig_Extension_DTwigManager extends Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('money', array($this, 'moneyFilter')),
-            new \Twig_SimpleFilter('tax', array($this, 'taxFilter')),
-            new \Twig_SimpleFilter('len', array($this, 'lenFilter')),
-            new \Twig_SimpleFilter('wei', array($this, 'weiFilter')),
-            new \Twig_SimpleFilter('truncate', array($this, 'truncateFilter')),
-            new \Twig_SimpleFilter('encrypt', array($this, 'encryptFilter')),
-            new \Twig_SimpleFilter('decrypt', array($this, 'decryptFilter')),
+            new \TwigSimpleFilter('money', array($this, 'moneyFilter')),
+            new \TwigSimpleFilter('tax', array($this, 'taxFilter')),
+            new \TwigSimpleFilter('len', array($this, 'lenFilter')),
+            new \TwigSimpleFilter('wei', array($this, 'weiFilter')),
+            new \TwigSimpleFilter('truncate', array($this, 'truncateFilter')),
+            new \TwigSimpleFilter('encrypt', array($this, 'encryptFilter')),
+            new \TwigSimpleFilter('decrypt', array($this, 'decryptFilter')),
         );
     }
 

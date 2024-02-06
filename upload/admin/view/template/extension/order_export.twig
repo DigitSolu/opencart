@@ -1,0 +1,798 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-right">
+        </div>
+      <h1>{{ heading_title }}</h1>
+       <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {{ getkeyform }}
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+     {% if success %}
+      <div class="alert alert-success alert-dismissible"><i class="fas fa-check-circle"></i> {{ success }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <h3 class="panel-title"><i class="fas fa-pencil-alt"></i> {{ text_list }}</h3>
+          <div class="pull-right hide">
+            <button type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-search"></i> {{ button_filter }}</button>
+          </div>
+      </div>
+    <div class="panel-body">
+      {% if rules %}
+      <div class="well">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="form-group">
+            <label class="control-label" for="input-rule-id">{{ entry_ruleid }}</label>
+              <select name="rule_id" id="input-rule-id" class="form-control">
+                <option value="0">{{ text_select }}</option>
+                {% for rule in rules %}
+                {% if rule.rule_id == rule_id %}
+                <option value="{{ rule.rule_id }}" selected="selected">{{ rule.rule_name }}</option>
+                {% else %}
+                <option value="{{ rule.rule_id }}" type="submit">{{ rule.rule_name }}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+        
+          {% if rule_id %}
+          <div class="col-sm-4" style="margin-top:20px;">
+            <div class="form-group">
+              <label class="control-label"></label>
+              <button type="button" rel="{{ rule_id }}" rel1="{{ filename }}" class="col-sm-5 btn btn-danger tmd-delete"><i class="fa fa-trash"></i> {{ text_delete }}</button>
+              <a href="{{ reset }}" style="margin-left:10px;" class="col-sm-5 btn btn-warning"><i class="fa fa-refresh"></i> {{ text_reset }}</a>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+      <legend style="border-bottom-color:#ce1515;"></legend>
+      {% endif %}
+
+      <form action="{{ export_action }}" method="post" enctype="multipart/form-data"  id="form-order">
+        <div class="row">
+          <div class="col-sm-12 col-xs-12">
+            <div class="form-group">
+              <div class="row">
+                <label class="control-label col-sm-12" for="input-order-status">{{ entry_order_status }}</label>
+                <div class="col-sm-12">
+                  <select name="filter_order_status[]" id="filter_order_status" multiple style="width:100%;" class="form-control chosen-select">
+                    {% if '0' in filter_order_status %}
+                    <option value="0" selected="selected">{{ text_missing }}</option>
+                    {% else %}
+                    <option value="0">{{ text_missing }}</option>
+                    {% endif %}
+                    {% for  order_status in order_statuses %}
+                    {% if order_status.order_status_id in filter_order_status %}
+                    <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                    {% else %}
+                    <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-order-id">{{ entry_order_id }}</label>
+              <input type="text" name="filter_order_id" value="{{ filter_order_id }}" placeholder="{{ entry_order_id }}" id="input-order-id" class="form-control" />
+            </div>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+               <label class="col-form-label" for="input-store_id">{{ entry_store }}</label>
+               <select name="filter_store_id" id="filter_store_id" class="form-control">
+                 <option value="">{{ text_default }}</option>
+                 {% for store in stores_info %}
+                 {% if store.store_id == filter_store_id %}
+                 <option value="{{ store.store_id }}" selected="selected">{{ store.name }}</option>
+                 {% else %}
+                 <option value="{{ store.store_id }}">{{ store.name }}</option>
+                 {% endif %}
+                 {% endfor %}
+               </select>
+
+             </div>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-customer">{{ entry_customer }}</label>
+              <input type="text" name="filter_customer" value="{{ filter_customer }}" placeholder="{{ entry_customer }}" id="input-customer" class="form-control"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-startdate">{{ entry_startdate }}</label>
+              <div class="input-group date">
+                <input type="text" name="filter_startdate" value="{{ filter_startdate }}" placeholder="{{ entry_startdate }}" id="input-startdate" data-date-format="YYYY-MM-DD" class="form-control"/>
+                   <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                    </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+               <label class="col-form-label" for="input-enddate">{{ entry_enddate }}</label>
+               <div class="input-group date">
+                 <input type="text" name="filter_enddate" value="{{ filter_enddate }}" placeholder="{{ entry_enddate }}" id="input-enddate" data-date-format="YYYY-MM-DD"  class="form-control"/>
+                   <span class="input-group-btn">
+                     <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                     </span>
+               </div>
+            </div>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-date-added">{{ entry_date_added }}</label>
+              <div class="input-group date">
+                <input type="text" name="filter_date_added" value="{{ filter_date_added }}" placeholder="{{ entry_date_added }}" id="input-date-added" data-date-format="YYYY-MM-DD" class="form-control"/>
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                </span>
+              </div>
+           </div>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-date-modified">{{ entry_date_modified }}</label>
+              <div class="input-group date">
+                <input type="text" name="filter_date_modified" value="{{ filter_date_modified }}" placeholder="{{ entry_date_modified }}" id="input-date-modified" data-date-format="YYYY-MM-DD" class="form-control"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                </span>
+              </div>
+           </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+               <label class="col-form-label" for="input-customer_group_id">{{ customer_group_id }}</label>
+               <select name="filter_customer_group_id" id="filter_customer_group_id" class="form-control">
+                 <option value=""></option>
+                 {% for customer_group in customer_groups %}
+                 {% if customer_group.customer_group_id == filter_customer_group_id %}
+                 <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
+                 {% else %}
+                 <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
+                 {% endif %}
+                 {% endfor %}
+               </select>
+             </div>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-filter_category">{{ entry_category }}</label>
+              <input type="text" name="filter_category" value="{{ filter_category }}" placeholder="{{ entry_category }}" id="input-filter_category" class="form-control" />
+              <input type="hidden" name="category_id" value="{{ filter_category1 }}"/>
+            </div>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-filter_product">{{ entry_product }}</label>
+              <input type="text" name="filter_product" value="{{ filter_product }}" placeholder="{{ entry_product }}" id="input-filter_product" class="form-control" />
+            </div>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <div class="form-group">
+              <label class="col-form-label" for="input-total">{{ entry_total }}</label>
+              <input type="text" name="filter_total" value="{{ filter_total }}" placeholder="{{ entry_total.name }}" id="input-total" class="form-control" />
+            </div>
+          </div>
+        </div>
+      <hr>
+
+    <div class="card-body row">
+        <div class="col-sm-2 col-xs-12">
+            <ul class="nav nav-pills nav-stacked">
+               <li class="active">
+                 <a href="#tab-order" data-toggle="tab" data-tab="taborder">{{ tab_order }}</a>
+              </li>
+              <li>
+                <a href="#tab-customer" data-toggle="tab" data-tab="tabcustomer">{{ tab_customer }}</a>
+              </li>
+              <li>
+                <a href="#tab-payment" data-toggle="tab"  data-tab="tabpayment">{{ tab_payment }}</a>
+              </li>
+              <li>
+                <a href="#tab-shipping" data-toggle="tab" data-tab="tabshipping">{{ tab_shipping }}</a>
+              </li>
+              <li>
+                <a href="#tab-product" data-toggle="tab" data-tab="tabproduct">{{ tab_product }}</a>
+              </li>
+            </ul>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+            <div class="tab-content" id="unassigned_attributes">
+              <div class="heading">{{ text_gdata }}
+                <div class="btn btn-primary sall">
+                    <input type="hidden" onclick="$('.tab-pane.active input').prop('checked', this.checked);" /> {{ text_select_all }} <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="tab-pane list_tabpayment" id="tab-payment">
+                <ul class="list-unstyled sortable">
+                  <li data-tab="tabpayment" class="payment_firstname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_firstname] }} type="checkbox" value="payment_firstname" name="order[payment_firstname]"/> {{ export_payment_firstname }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_lastname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_lastname] }} type="checkbox" value="payment_lastname" name="order[payment_lastname]"/> {{ export_payment_lastname }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_lastname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_company] }} type="checkbox" value="payment_company" name="order[payment_company]"/> {{ export_payment_company }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_address_1"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_address_1] }} type="checkbox" value="payment_address_1" name="order[payment_address_1]"/> {{ export_payment_address_1 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_address_2"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_address_2] }} type="checkbox" value="payment_address_2" name="order[payment_address_2]"/> {{ export_payment_address_2 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_postcode"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_postcode] }} type="checkbox" value="payment_postcode" name="order[payment_postcode]"/> {{ export_payment_postcode }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_city"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_city] }} type="checkbox" value="payment_city" name="order[payment_city]"/> {{ export_payment_city }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_zone"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_zone] }} type="checkbox" value="payment_zone" name="order[payment_zone]"/> {{ export_payment_zone }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_zone_code"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_zone_code] }} type="checkbox" value="payment_zone_code" name="order[payment_zone_code]"/> {{ export_payment_zone_code }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_country"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_country] }} type="checkbox" value="payment_country" name="order[payment_country]"/> {{ export_payment_country }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_iso_code_2"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_iso_code_2] }} type="checkbox" value="payment_iso_code_2" name="order[payment_iso_code_2]"/> {{ export_payment_iso_code_2 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_iso_code_3"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_iso_code_3] }} type="checkbox" value="payment_iso_code_3" name="order[payment_iso_code_3]"/> {{ export_payment_iso_code_3 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_address_format"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_address_format] }} type="checkbox" value="payment_address_format" name="order[payment_address_format]"/> {{ export_payment_address_format }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_custom_field"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_custom_field] }} type="checkbox" value="payment_custom_field" name="order[payment_custom_field]"/> {{ export_payment_custom_field }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_method"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_method] }} type="checkbox" value="payment_method" name="order[payment_method]"/> {{ export_payment_method }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabpayment" class="payment_code"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[payment_code] }} type="checkbox" value="payment_code" name="order[payment_code]"/> {{ export_payment_code }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                </ul>
+              </div>
+              <div class="tab-pane list_tabshipping" id="tab-shipping">
+                <ul class="list-unstyled sortable">
+                  <li data-tab="tabshipping" class="shipping_firstname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_firstname] }} type="checkbox" value="shipping_firstname" name="order[shipping_firstname]"/> {{ export_shipping_firstname }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_lastname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_lastname] }} type="checkbox" value="shipping_lastname" name="order[shipping_lastname]"/> {{ export_shipping_lastname }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_company"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_company] }} type="checkbox" value="shipping_company" name="order[shipping_company]"/> {{ export_shipping_company }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_address_1"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_address_1] }} type="checkbox" value="shipping_address_1" name="order[shipping_address_1]"/> {{ export_shipping_address_1 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_address_2"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_address_2] }} type="checkbox" value="shipping_address_2" name="order[shipping_address_2]"/> {{ export_shipping_address_2 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_postcode"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_postcode] }} type="checkbox" value="shipping_postcode" name="order[shipping_postcode]"/> {{ export_shipping_postcode }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_city"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_city] }} type="checkbox" value="shipping_city" name="order[shipping_city]"/> {{ export_shipping_city }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_zone"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_zone] }} type="checkbox" value="shipping_zone" name="order[shipping_zone]"/> {{ export_shipping_zone }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_zone_code"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_zone_code] }} type="checkbox" value="shipping_zone_code" name="order[shipping_zone_code]"/> {{ export_shipping_zone_code }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_country"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_country] }} type="checkbox" value="shipping_country" name="order[shipping_country]"/> {{ export_shipping_country }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_iso_code_2"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_iso_code_2] }} type="checkbox" value="shipping_iso_code_2" name="order[shipping_iso_code_2]"/> {{ export_shipping_iso_code_2 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_iso_code_3"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_iso_code_3] }} type="checkbox" value="shipping_iso_code_3" name="order[shipping_iso_code_3]"/> {{ export_shipping_iso_code_3 }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_address_format"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_address_format] }} type="checkbox" value="shipping_address_format" name="order[shipping_address_format]"/> {{ export_shipping_address_format }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_method"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_method] }} type="checkbox" value="shipping_method" name="order[shipping_method]"/> {{ export_shipping_method }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shipping_code"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shipping_code] }} type="checkbox" value="shipping_code" name="order[shipping_code]"/> {{ export_shipping_code }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabshipping" class="shippingcost"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[shippingcost] }} type="checkbox" value="shippingcost" name="order[shippingcost]"/> {{ export_shippingcost }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                </ul>
+              </div>
+              <div class="tab-pane list_tabcustomer" id="tab-customer">
+                <ul class="list-unstyled sortable">
+                  <li data-tab="tabcustomer" class="customer"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[customer] }} type="checkbox" value="customer" name="order[customer]"/> {{ export_customer }}<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                  </li>
+                  <li data-tab="tabcustomer" class="email"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[email] }} type="checkbox" value="email" name="order[email]"/> {{ export_customer_email }}<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                  </li>
+                  <li data-tab="tabcustomer" class="telephone"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[telephone] }}  type="checkbox" value="telephone" name="order[telephone]"/> {{ export_telephone }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                  <li data-tab="tabcustomer" class="fax"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[fax] }}  type="checkbox" value="fax" name="order[fax]"/> {{ export_fax }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                </ul>
+              </div>
+                <div class="tab-pane active list_taborder" id="tab-order">
+                    <ul class="list-unstyled sortable">
+                      <li data-tab="taborder" class="order_id"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[order_id] }} type="checkbox" value="order_id" name="order[order_id]"/> {{ export_order_id }}<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                      </li>
+                      <li data-tab="taborder" class="invoice_no"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[invoice_no] }} type="checkbox" value="invoice_no" name="order[invoice_no]"/> {{ export_invoice_no }}<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                      </li>
+                      <li data-tab="taborder" class="invoice_prefix"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[invoice_prefix] }} type="checkbox" value="invoice_prefix" name="order[invoice_prefix]"/> {{ export_invoice_prefix }}<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                      </li>
+                      <li data-tab="taborder" class="store_name"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[store_name] }} type="checkbox" value="store_name" name="order[store_name]"/> {{ export_storetype }}<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                      </li>
+                      <li data-tab="taborder" class="coupon_code"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[coupon_code] }} type="checkbox" value="coupon_code" name="order[coupon_code]"/> {{ export_coupon_code }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="voucher_code"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[voucher_code] }} type="checkbox" value="voucher_code" name="order[voucher_code]"/> {{ export_voucher_code }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="store_credit"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[store_credit] }} type="checkbox" value="store_credit" name="order[store_credit]"/> {{ export_store_credit }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="status"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[status] }} type="checkbox" value="status" name="order[status]"/> {{ export_status }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="commission"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[commission] }} type="checkbox" value="commission" name="order[commission]"/> {{ export_commission }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="reward"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[reward] }} type="checkbox" value="reward" name="order[reward]"> {{ export_reward }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="comment"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[comment] }} type="checkbox" value="comment" name="order[comment]"/> {{ export_comment }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="weight"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[weight] }} type="checkbox" value="weight" name="order[weight]"/> {{ export_weight_total }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="total"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[total] }} type="checkbox" value="total" name="order[total]"/> {{ export_total }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="subtotal"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[subtotal] }} type="checkbox" value="subtotal" name="order[subtotal]"/> {{ export_subtotal }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="couponcost"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[couponcost] }} type="checkbox" value="couponcost" name="order[couponcost]"/> {{ export_couponcost }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="affiliate_firstname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[affiliate_firstname] }} type="checkbox" value="affiliate_firstname" name="order[affiliate_firstname]"/> {{ export_affiliate_firstname }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="affiliate_lastname"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[affiliate_lastname] }} type="checkbox" value="affiliate_lastname" name="order[affiliate_lastname]"/> {{ export_affiliate_lastname }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="date_added"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[date_added] }} type="checkbox" value="date_added" name="order[date_added]"/> {{ export_date_added }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                      <li data-tab="taborder" class="date_modified"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.order[date_modified] }} type="checkbox" value="date_modified" name="order[date_modified]"/> {{ entry_date_modified }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                    </ul>
+                  </div>
+                  <div class="tab-pane list_tabproduct" id="tab-product">
+                     <ul class="list-unstyled sortable">
+                        <input type="hidden" onclick="$('input[name*=\'product\']').prop('checked', this.checked);" />
+
+                        <li data-tab="tabproduct" class="product_id"><i class="fa fa-arrow-left" aria-hidden="true"></i><input  {{ orderexport.product[product_id] }}  type="checkbox" value="product_id" name="product[product_id]"/> {{ text_product_id }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_url"><i class="fa fa-arrow-left" aria-hidden="true"></i><input  {{ orderexport.product[product_url] }}  type="checkbox" value="product_url" name="product[product_url]"/> {{ text_product_url }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_imageurl"><i class="fa fa-arrow-left" aria-hidden="true"></i><input  {{ orderexport.product[product_imageurl] }}  type="checkbox" value="product_imageurl" name="product[product_imageurl]"/> {{ text_product_imageurl }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_manufac_name"><i class="fa fa-arrow-left" aria-hidden="true"></i><input  {{ orderexport.product[product_manufac_name] }}  type="checkbox" value="product_manufac_name" name="product[product_manufac_name]"/> {{ text_product_manufacturer }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+
+
+
+
+                        <li data-tab="tabproduct" class="product_name"><i class="fa fa-arrow-left" aria-hidden="true"></i><input  {{ orderexport.product[product_name] }}  type="checkbox" value="product_name" name="product[product_name]"/> {{ text_product_name }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_model"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_model] }} type="checkbox" value="product_model" name="product[product_model]"/> {{ text_model }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_sku"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_sku] }} type="checkbox" value="product_sku" name="product[product_sku]"/> {{ text_sku }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_upc"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_upc] }} type="checkbox" value="product_upc" name="product[product_upc]"/> {{ text_upc }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_ean"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_ean] }} type="checkbox" value="product_ean" name="product[product_ean]"/> {{ text_ean }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_jan"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_jan] }} type="checkbox" value="product_jan" name="product[product_jan]"/> {{ text_jan }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_isbn"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_isbn] }} type="checkbox" value="product_isbn" name="product[product_isbn]"/> {{ text_isbn }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_mpn"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_mpn] }} type="checkbox" value="product_mpn" name="product[product_mpn]"/> {{ text_mpn }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_quantity"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_quantity] }} type="checkbox" value="product_quantity" name="product[product_quantity]"/> {{ text_product_quantity }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_price"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_price] }} type="checkbox" value="product_price" name="product[product_price]"/> {{ text_price }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_options"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_options] }} type="checkbox" value="product_options" name="product[product_options]"/> {{ text_option }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_tax"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_tax] }} type="checkbox" value="product_tax" name="product[product_tax]"/> {{ text_tax }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_total"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_total] }} type="checkbox" value="product_total" name="product[product_total]"/> {{ text_total }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                        <li data-tab="tabproduct" class="product_reward"><i class="fa fa-arrow-left" aria-hidden="true"></i><input {{ orderexport.product[product_reward] }} type="checkbox" value="product_reward" name="product[product_reward]"/> {{ text_reward }}<i class="fa fa-arrow-right" aria-hidden="true"></i></li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+              <div class="heading">{{ text_selected }}<div class="btn btn-primary rall">
+                  <i class="fa fa-refresh" aria-hidden="true"></i>{{ text_remove_all }}
+              </div></div>
+                <ul class="list-unstyled sortable" id="assigned_attributes">
+                </ul>
+            </div>
+            <div class="col-sm-2 col-xs-12 padd0">
+                <ul class="list-unstyled">
+                  <li>
+                    {{ text_fileformat }}
+                    <select name="format" id="input-format" class="form-control">
+                      {% for format in formates %}
+                      {% if format.value == orderexport.format %}
+                      <option value="{{ format.value }}" selected="selected">{{ format.text }}</option>
+                      {% else %}
+                      <option value="{{ format.value }}">{{ format.text }}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select>
+                  </li>
+                  <li>
+                    {{ entry_filename }}
+                    <input type="text" name="exportfilename" value="{{ filename }}" placeholder="{{ entry_filename }}" id="input-filename" class="form-control" />
+                  </li>
+                  <li>
+                    <input type="hidden" name="rule_id" value="{{ rule_id }}"/>
+                    {{ entry_add_rule }}
+                    {% if rule_type==1 %}
+                    <input type="checkbox" name="rule_type" value="1" checked="checked" id="input-rule" class="form-control" />
+                    {% else %}
+                    <input type="checkbox" name="rule_type" value="1" id="input-rule" class="form-control" />
+                    {% endif %}
+                  </li>
+                  <li class="show-rules" style="display:none;">
+                    {{ entry_rulename }}
+                    <input type="text" name="rule_name" value="{{ rule_name }}" placeholder="{{ entry_rulename }}" id="input-rule-name" class="form-control" />
+                  </li>
+                  <li>
+                    <button type="submit" form="form-customer" data-toggle="tooltip" title="{{ button_export }}" class="btn btn-primary btn-block"><i class="fa fa-download"></i> {{ button_export }}</button>
+                  </li>
+                </ul>
+              </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+<link type="text/css" href="view/stylesheet/orderexport/confirm.css" rel="stylesheet" media="screen" />
+<link type="text/css" href="view/stylesheet/orderexport/chosen.min.css" rel="stylesheet" media="screen" />
+
+<script src="view/javascript/jquery/orderexport/jquery-confirm.min.js" type="text/javascript"></script>
+<script src="view/javascript/jquery/orderexport/chosen.jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+/* Rule Work Start */
+$(".chosen-select").chosen({
+  no_results_text: "Oops, nothing found!"
+})
+
+$(document).on('change','#input-rule-id',function(){
+  var rule_id = $(this).val();
+  if(rule_id!=0) {
+    location = 'index.php?route=extension/order_export&user_token={{ user_token }}&rule_id=' + $(this).val();
+  } else {
+    location = 'index.php?route=extension/order_export&user_token={{ user_token }}';
+  }
+})
+
+$(document).ready(function () {
+  $("#input-rule").click(function () {
+    if ($(this).is(":checked")) {
+      $(".show-rules").show();
+    } else {
+      $(".show-rules").hide();
+    }
+  });
+  var rule1 = '{{ rule_type }}';
+  if(rule1==1) {
+    $(".show-rules").removeAttr("style");
+  }
+});
+$(document).on('click','.tmd-delete',function() {
+  rule_id=$(this).attr('rel');
+  title=$(this).attr('rel1');
+  $.confirm({
+    title: 'Confirmation!',
+    content: 'Do You Confirm You Want To Delete '+title+' ?',
+    buttons: {
+      confirm: {
+        text: 'Confirm',
+        btnClass: 'btn-red',
+        keys: ['enter', 'shift'],
+        action:function () {
+          $.ajax({
+            url: 'index.php?route=extension/order_export/delete&user_token={{ user_token }}&rule_id='+rule_id,
+            type: 'post',
+            data: '',
+            dataType: 'json',
+            beforeSend: function() {},
+            complete: function() {},
+            success: function(json) {
+              $('.alert, .text-danger').remove();      
+              if (json['success']) {
+                $('.breadcrumb').after('<div class="alert alert-success alert-dismissible">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                if (json['redirect']) {
+                  setTimeout(function () {
+                    location = json['redirect'];
+                  }, 1000);
+                }
+              }
+            },
+          });
+        },
+        cancel: function () {},
+      }
+    }
+  });
+});
+/* Rule Work End */
+$(document).ready(function () {
+  $('.sortable').sortable({
+    selectedClass: 'active',
+    multiDrag: false,
+    items: 'li',
+    connectWith: '.sortable',
+    stop: function( event, ui ) {
+        $('#assigned_attributes input').prop("checked", true);
+        $('#unassigned_attributes .tab-pane .sortable input').prop("checked", false);
+      //  window.location.reload('#unassigned_attributes .tab-pane');
+    }
+  });
+});
+$('#unassigned_attributes .tab-pane li').click(function(e) {
+  var el = $(this).clone();
+  $('#assigned_attributes').append(el[0]);
+  $(this).remove();
+  $("#assigned_attributes input").prop("checked", true);
+});
+$(document).on('click', '#assigned_attributes .ui-sortable-handle', function(e){
+  var el = $(this).clone();
+  $('#unassigned_attributes .tab-pane.active ul').append(el[0]);
+  $(this).remove();
+  $("#unassigned_attributes .tab-pane.active ul li input").prop("checked", false);
+});
+$(document).on('click', '.sall', function(e){
+  $('.tab-pane.active li').each(function(e) {
+    var el = $(this).clone();
+    $('#assigned_attributes').append(el[0]);
+    $(this).remove();
+    $("#assigned_attributes input").prop("checked", true);
+  });
+});
+$(document).on('click', '.rall', function(e){
+  $('#assigned_attributes li').each(function(e) {
+    var tab =  $(this).attr('data-tab');
+    var el = $(this).clone().removeClass('checked');
+    $(' .list_'+tab+' .sortable').append(el[0]);
+    $(this).remove();
+    $('.ui-sortable-handle.active').removeClass('active');
+    $(' .list_'+tab+' .sortable input').prop("checked", false);
+    $(".tab-pane.active .sortable input").prop("checked", false);
+  });
+
+});
+</script>
+<script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+url = 'index.php?route=extension/order_export&user_token={{ user_token }}';
+
+var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+if (filter_order_id) {
+  url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+}
+
+var filter_customer = $('input[name=\'filter_customer\']').val();
+
+if (filter_customer) {
+  url += '&filter_customer=' + encodeURIComponent(filter_customer);
+}
+
+var filter_order_status = $('#filter_order_status').val();
+
+  if (filter_order_status) {
+    url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+  }
+
+var filter_total = $('input[name=\'filter_total\']').val();
+
+if (filter_total) {
+  url += '&filter_total=' + encodeURIComponent(filter_total);
+}
+
+var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+if (filter_date_added) {
+  url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+}
+
+var filter_date_modified = $('input[name=\'filter_date_modified\']').val();
+
+if (filter_date_modified) {
+  url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
+}
+
+var filter_startdate = $('input[name=\'filter_startdate\']').val();
+
+if (filter_startdate) {
+  url += '&filter_startdate=' + encodeURIComponent(filter_startdate);
+}
+
+
+var filter_enddate = $('input[name=\'filter_enddate\']').val();
+
+if (filter_enddate) {
+  url += '&filter_enddate=' + encodeURIComponent(filter_enddate);
+}
+
+//8/3/2016
+var filter_customer_group_id = $('select[name=\'filter_customer_group_id\']').val();
+if (filter_customer_group_id !== '') {
+  url += '&filter_customer_group_id=' + encodeURIComponent(filter_customer_group_id);
+}
+//8/3/2016
+
+//13/12/2016
+var filter_store_id = $('select[name=\'filter_store_id\']').val();
+if (filter_store_id !== '') {
+  url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+}
+//13/12/2016
+  var filter_product = $('input[name=\'filter_product\']').val();
+
+  if (filter_product) {
+    url += '&filter_product=' + encodeURIComponent(filter_product);
+  }
+
+
+var filter_category = $('input[name=\'filter_category\']').val();
+
+if (filter_category) {
+  url += '&filter_category=' + encodeURIComponent(filter_category);
+}
+
+var filter_category1 = $('input[name=\'category_id\']').val();
+
+if (filter_category1) {
+  url += '&filter_category1=' + encodeURIComponent(filter_category1);
+}
+
+location = url;
+});
+//--></script>
+<script type="text/javascript"><!--
+$('input[name=\'filter_customer\']').autocomplete({
+'source': function(request, response) {
+  $.ajax({
+    url: 'index.php?route=customer/customer/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+    dataType: 'json',
+    success: function(json) {
+      response($.map(json, function(item) {
+        return {
+          label: item['name'],
+          value: item['customer_id']
+        }
+      }));
+    }
+  });
+},
+'select': function(item) {
+  $('input[name=\'filter_customer\']').val(item['label']);
+  $('input[name=\'customer_id\']').val(item['value']);
+}
+});
+//--></script>
+<script type="text/javascript"><!--
+$('input[name^=\'selected\']').on('change', function() {
+$('#button-shipping, #button-invoice').prop('disabled', true);
+
+var selected = $('input[name^=\'selected\']:checked');
+
+if (selected.length) {
+  $('#button-invoice').prop('disabled', false);
+}
+
+for (i = 0; i < selected.length; i++) {
+  if ($(selected[i]).parent().find('input[name^=\'shipping_code\']').val()) {
+    $('#button-shipping').prop('disabled', false);
+
+    break;
+  }
+}
+});
+
+$('input[name^=\'selected\']:first').trigger('change');
+
+$('a[id^=\'button-delete\']').on('click', function(e) {
+e.preventDefault();
+
+if (confirm('{{ text_confirm }}')) {
+  location = $(this).attr('href');
+}
+});
+//--></script>
+<script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<link href="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript"><!--
+$('.date').datetimepicker({
+  pickTime: false
+});
+//--></script>
+</div>
+
+<script type="text/javascript">
+//Product
+$('input[name=\'filter_product\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['product_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_product\']').val(item['label']);
+  }
+});
+
+//Categories
+$('input[name=\'filter_category\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/category/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {
+        json.unshift({
+          category_id: 0,
+          name:'{{ text_none }}'
+        });
+
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['category_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_category\']').val(item['label']);
+	$('input[name=\'category_id\']').val(item['value']);
+  }
+});
+
+{% if orderexport.order %}
+  {% for export in orderexport.order %}
+    {{ "$('."~export~"').trigger('click');" }}
+  {% endfor %}{% endif %}
+
+{% if orderexport.product %}
+  {% for export in orderexport.product %}
+    {{ "$('."~export~"').trigger('click');" }}
+  {% endfor %}{% endif %}
+</script>
+<style>
+.panel-heading{
+  min-height: 50px;
+}
+.panel-heading #button-filter{
+  margin-top:-5px;
+}
+.card-body .nav-pills > li.active > a{
+  background-color: #1e91cf;
+}
+.card-body .nav-pills > li > a{
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+}
+.card-body .sortable {
+    border: 1px solid #dadada;
+    overflow-y: visible;
+    overflow-x: visible;
+    position: relative;
+    min-height: 400px;
+}
+.card-body{
+  margin-bottom: 20px;
+}
+.card-body .sortable li {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #dadada;
+    width: 100%;
+}
+.card-body .sortable li input{
+  visibility: hidden;
+  width: auto;
+  border: none;
+}
+.padd0 ul li{
+  clear: both;
+  margin: 0 0 10px;
+}
+.sall{
+  position: relative;
+}
+.tab-content .ui-sortable-handle.active{
+    color: #fff;
+    background-color: #1e91cf;
+    border-color: #197bb0;
+}
+.heading{
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  padding: 6px 10px;
+  min-height: 45px;
+  line-height: 30px;
+}
+.heading .btn i {
+  margin-right: 5px;
+}
+.heading .btn{
+  float: right;
+  padding:5px 10px;
+}
+.sortable i{
+  float: right;
+  line-height: 22px;
+}
+.sortable .fa-arrow-left{
+  display: none;
+}
+#assigned_attributes .fa-arrow-left{
+  display: inline-block !important;
+  float: left;
+  margin-right: 5px;
+}
+#assigned_attributes .fa-arrow-right::before{
+  content: "\f047";
+}
+</style>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="view/javascript/jquery/jquery.multipleSortable.js"></script>
+{{ footer }}

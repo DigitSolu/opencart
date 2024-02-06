@@ -1,0 +1,29 @@
+{% if histories %}
+<h3>{{ text_history }}</h3>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="text-left">{{ column_date_added }}</th>
+        <th class="text-left">{{ column_status }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for history in histories %}
+      <tr>
+        <td class="text-left">{{ history.date_added }}
+          {% if loop.first %}
+            <label class="label label-success">{{ text_latest }}</label>
+          {% endif %}
+        </td>
+        <td class="text-left"><span class="label" style="background-color: {{ history.bgcolor }};color: {{ history.textcolor ? history.textcolor : '#666' }}">{{ history.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-sm-6 text-left">{{ pagination }}</div>
+  <div class="col-sm-6 text-right">{{ results }}</div>
+</div>
+{% endif %}

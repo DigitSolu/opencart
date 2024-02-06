@@ -40,7 +40,15 @@ final class Twig {
 			
             //d_twig_manager.xml
             //$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
-			$loader = new \Twig\Loader\FilesystemLoader(str_replace($filename.'.twig','', modification(DIR_TEMPLATE.$filename.'.twig')));
+			$loader = new \Twig\Loader\FilesystemLoader();
+
+    		if (defined('DIR_CATALOG') && is_dir(DIR_MODIFICATION . 'admin/view/template/')) {	
+    			$loader->addPath(DIR_MODIFICATION . 'admin/view/template/');
+    		} elseif (is_dir(DIR_MODIFICATION . 'catalog/view/theme/')) {
+    			$loader->addPath(DIR_MODIFICATION . 'catalog/view/theme/');
+    		}
+    		
+    		$loader->addPath(DIR_TEMPLATE);
             
 
 			$twig = new \Twig\Environment($loader, $config);
@@ -52,7 +60,14 @@ final class Twig {
             }
             
 
-			return $twig->render($filename . '.twig', $this->data);
+			
+				// fix theme editor in 3.0.3.5+
+            	if (isset($code) && is_string($code) && strlen(trim($code)) > 1) {
+					return $twig->createTemplate($code)->render($this->data);
+				} else {
+					return $twig->render($filename . '.twig', $this->data);
+				}
+            
 		} catch (Exception $e) {
 			trigger_error('Error: Could not load template ' . $filename . '!');
 			exit();

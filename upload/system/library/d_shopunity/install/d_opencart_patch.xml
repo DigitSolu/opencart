@@ -3,7 +3,7 @@
     <name>d_opencart_patch</name>
     <code>d_opencart_patch</code>
     <description>Permission fixes in Opencart 3.x</description>
-    <version>3.1.9</version>
+    <version>3.1.10</version>
     <author>Dreamvention</author>
     <link>http://dreamvention.com</link>
     <file path="admin/controller/user/user_permission.php">
@@ -197,7 +197,26 @@ $language_data = $this->cache->get('language');
             <add position="replace"><![CDATA[
             //d_twig_manager.xml
             //$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
-			$loader = new \Twig\Loader\FilesystemLoader(str_replace($filename.'.twig','', modification(DIR_TEMPLATE.$filename.'.twig')));
+			$loader = new \Twig\Loader\FilesystemLoader();
+
+    		if (defined('DIR_CATALOG') && is_dir(DIR_MODIFICATION . 'admin/view/template/')) {	
+    			$loader->addPath(DIR_MODIFICATION . 'admin/view/template/');
+    		} elseif (is_dir(DIR_MODIFICATION . 'catalog/view/theme/')) {
+    			$loader->addPath(DIR_MODIFICATION . 'catalog/view/theme/');
+    		}
+    		
+    		$loader->addPath(DIR_TEMPLATE);
+            ]]></add>
+        </operation>
+	  	<operation error="skip" info="3.0.3.x">
+            <search><![CDATA[return $twig->render($filename . '.twig', $this->data);]]></search>
+            <add position="replace"><![CDATA[
+				// fix theme editor in 3.0.3.5+
+            	if (isset($code) && is_string($code) && strlen(trim($code)) > 1) {
+					return $twig->createTemplate($code)->render($this->data);
+				} else {
+					return $twig->render($filename . '.twig', $this->data);
+				}
             ]]></add>
         </operation>
     </file>

@@ -1,0 +1,147 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      <table class="table table-bordered">
+        <thead>
+            <tr>
+              <th colspan="2">{{ text_page_detail }}</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ text_page_form_title }}: <a href="{{ page_form_href }}" target="_blank">{{ page_form_title }}</a></td>
+            <td>{{ text_date_added }}: {{ date_added }}</td>
+          </tr>
+         </tbody>
+      </table>
+
+      {% if product_id %}
+      <h3>{{ text_product_detail }}</h3>
+      <table class="table table-bordered">
+        <tr>
+            <td style="width:50%;">{{ text_product_name }}: <a href="{{ product_link }}">{{ product_name }}</a></td>
+           <td>{{ text_product_model }}: {{ product_model }}</td>
+          </tr>
+      </table>
+      {% endif %}
+
+      <h3>{{ text_fields }}</h3>
+      <table class="table table-bordered table-responsive">
+        <thead>
+          <tr>
+            <th style="width: 20%;" class="text-left">{{ text_field_name }}</th>
+            <th style="width: 80%;" class="text-left">{{ text_field_value }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for page_request_option in page_request_options %}
+          <tr>
+            <td class="text-left"><label>{{ page_request_option['name'] }}</label></td>
+            <td class="text-left">
+              {% if page_request_option['type'] != 'file' %}
+              {{ page_request_option['value'] }}
+              {% else %}
+                {% for value_file in page_request_option['value'] %}
+                  <a href="{{ value_file['href'] }}" class="btn btn-success btn-sm" data-toggle="tooltip" title="{{ value_file['filename'] }}"><i class="fa fa-download"></i> {{ value_file['filename'] }}</a>
+
+                  {% if value_file['view_image_button'] %}
+                  <button type="button" class="btn btn-info btn-sm button-view-image" data-image="{{ value_file['view_image_src'] }}" data-image-name="{{ page_request_option['name'] }}: {{ value_file['filename'] }}" ><i class="fa fa-eye"></i> {{ button_view_image }}</button>
+                  {% endif %}
+                  <br/><br/>
+                {% endfor %}
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if has_document %}
+      <div class="text-left">
+        <button type="button" class="btn btn-primary btn-sm download-all"><i class="fa fa-download"></i> {{ button_download_all }}</button>
+      </div>
+      {% endif %}
+
+      {% if config_submission_status %}
+      <div id="history"></div>
+      {% endif %}
+      
+    </div>
+  </div>
+
+
+  <div class="modal" id="viewimage-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h5 class="image-name"></h5>
+          <div class="image"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript"><!--
+// Downlaod in Once Zip File
+$('.download-all').on('click', function() {
+  $.ajax({
+    url: 'index.php?route=extension/ciformbuilder/form_submission/downloadall&page_request_id={{ page_request_id }}',
+    dataType: 'json',
+    beforeSend: function() {
+      $('.download-all').button('loading');
+    },
+    complete: function() {
+    },
+    success: function(json) {
+      if(json['download_link']) {
+          window.location = json['download_link'];
+      }
+
+      setTimeout(function(){
+        $('.download-all').button('reset');
+      }, 1000);
+    }
+  });
+});
+
+// View Image
+$('.button-view-image').on('click', function() {
+  $('#viewimage-modal .image, #viewimage-modal .image-name').html('');
+
+  var image = $(this).attr('data-image');
+  var image_name = $(this).attr('data-image-name');
+  if(image) {
+    $('#viewimage-modal .image-name').html(image_name);
+    $('#viewimage-modal .image').html('<img src="'+ image +'" class="img-responsive" />');
+    $('#viewimage-modal').modal('show');
+  }
+});
+
+{% if config_submission_status %}
+$('#history').delegate('.pagination a', 'click', function(e) {
+  e.preventDefault();
+
+  $('#history').load(this.href);
+});
+
+$('#history').load('index.php?route=extension/ciformbuilder/form_submission/history&page_request_id={{ page_request_id }}');
+{% endif %}
+//--></script>
+</div>
+{{ footer }}

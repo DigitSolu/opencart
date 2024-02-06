@@ -1,0 +1,111 @@
+
+.form-horizontal .control-label { text-align: left; display: block; margin-bottom: 5px;
+font-size: 14px;}
+.cicaptcha { clear: both; }
+.ci-buttons { clear: both; }
+.ci-header, .ci-paragraph, .ci-hrline {
+  clear: both;
+}
+.ci-paragraph{
+  font-size: 14px;
+}
+.ci-header{
+  background: #ddd;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.pageform .form-group{
+  margin-left: 0;
+  margin-right: 0;
+}
+.pageform .btn-default {
+  background : #fff;
+  color: #333;
+  border-color: #ccc;
+}
+
+.pageform .btn-group .active{
+  background : #1872A2;
+  color: #fff;
+  border-color: #1872A2;
+}
+
+.pageform .btn-group .btn:hover{
+  background : #1872A2;
+  color: #fff;
+  border-color: #1872A2;
+}
+.preview { width: 45px; height: 35px; border: 1px solid #ccc; }
+.upload-wise .text-message { margin-top: 4px; }
+.sbold i { font-size: 34px; }
+
+.ci-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  vertical-align: middle;
+}
+
+/* Hide default HTML checkbox */
+.ci-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.ci-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.ci-slider:before {
+  position: absolute;
+  content: "";
+  height: 23px;
+  width: 23px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .ci-slider {
+  background-color: #2196F3;
+}
+
+input:focus + .ci-slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .ci-slider:before {
+  -webkit-transform: translateX(23px);
+  -ms-transform: translateX(23px);
+  transform: translateX(23px);
+}
+
+.ci-slider.round {
+  border-radius: 34px;
+}
+
+.ci-slider.round:before {
+  border-radius: 50%;
+}
+#column-left .pageform [class^="col-"],
+#column-left .pageform [class*=" col-"] {
+   width: 100%;
+}
+#column-right .pageform [class^="col-"],
+#column-right .pageform [class*=" col-"] {
+   width: 100%;
+}
+
+.file-vname { margin-top: 5px; text-align: center; }

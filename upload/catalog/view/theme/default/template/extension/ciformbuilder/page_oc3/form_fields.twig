@@ -1,0 +1,680 @@
+{% if page_form_options %}
+  {% for page_form_option in page_form_options %}
+    {% if page_form_option.type == 'select' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <select name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control">
+          <option value="">{{ text_select }}</option>
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+          {% if page_form_option_value.default_value %}
+            {% set sel = 'selected="selected"' %}
+          {% else %}
+            {% set sel = '' %}
+          {% endif %}
+          <option value="{{ page_form_option_value.page_form_option_value_id }}" {{ sel }}>{{ page_form_option_value.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+      {% if page_form_option.type == 'radio' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}" style="text-align: {{ page_form_option.image_align }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }} {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div id="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+          <div class="radio-inline">
+            <label>
+              {% if page_form_option_value.default_value %}
+                {% set sel = 'selected="selected"' %}
+              {% else %}
+                {% set sel = '' %}
+              {% endif %}
+              <input type="radio" name="field[{{ page_form_option.page_form_option_id }}]" value="{{ page_form_option_value.page_form_option_value_id }}" {{ sel }} />
+              {{ page_form_option_value.name }}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if page_form_option.type == 'checkbox' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div id="input-field{{ page_form_option.page_form_option_id }}">
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+          <div class="checkbox">
+            <label>
+              {% if page_form_option_value.default_value %}
+                {% set sel = 'selected="selected"' %}
+              {% else %}
+                {% set sel = '' %}
+              {% endif %}
+              <input type="checkbox" name="field[{{ page_form_option.page_form_option_id }}][]" value="{{ page_form_option_value.page_form_option_value_id }}" {{ sel }} />
+
+              {% if page_form_option_value.thumb %}
+                <span class="value-thumb checkbox-image-width">
+                  <img src="{{ page_form_option_value.thumb }}" alt="{{ page_form_option_value.field_name }}" title="{{ page_form_option_value.field_name }}" class="" />
+                </span>
+              {% endif %}
+
+              {% if page_form_option_value.color %}
+                <div class="value-color" style="background: {{ page_form_option_value.color }};"></div>
+              {% endif %}
+
+              {{ page_form_option_value.name }}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type == 'checkbox_switch' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div id="input-field{{ page_form_option.page_form_option_id }}">
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+          <div class="checkbox">
+            <label class="ci-switch">
+              {% if page_form_option_value.default_value %}
+                {% set sel = 'selected="selected"' %}
+                {% set sel_active = 'active' %}
+              {% else %}
+                {% set sel = '' %}
+                {% set sel_active = '' %}
+              {% endif %}
+              <input type="checkbox" name="field[{{ page_form_option.page_form_option_id }}][]" value="{{ page_form_option_value.page_form_option_value_id }}" {{ sel }} />
+              <span class="ci-slider round"></span>
+            </label>
+            <label>
+              {% if page_form_option_value.thumb %}
+                <span class="value-thumb">
+                  <img src="{{ page_form_option_value.thumb }}" alt="{{ page_form_option_value.field_name }}" title="{{ page_form_option_value.field_name }}" class="" />
+                </span>
+              {% endif %}
+
+              {% if page_form_option_value.color %}
+                <div class="value-color" style="background: {{ page_form_option_value.color }};"></div>
+              {% endif %}
+              {{ page_form_option_value.name }}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type == 'multi_select' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <select multiple name="field[{{ page_form_option.page_form_option_id }}][]" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control multiselect">
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+          {% if page_form_option_value.default_value %}
+            {% set sel = 'selected="selected"' %}
+          {% else %}
+            {% set sel = '' %}
+          {% endif %}
+          <option value="{{ page_form_option_value.page_form_option_value_id }}" {{ sel }}>{{ page_form_option_value.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type == 'radio_toggle' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}" style="text-align: {{ page_form_option.label_align }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div id="input-field{{ page_form_option.page_form_option_id }}" class="btn-group" data-toggle="buttons">
+          {% set sel_count = 0 %}
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+            {% if sel_count == 0 and page_form_option_value.default_value %}
+              {% set sel = 'checked="checked"' %}
+              {% set sel_active = 'active' %}
+              {% set sel_count = sel_count + 1 %}
+            {% else %}
+              {% set sel = '' %}
+              {% set sel_active = '' %}
+            {% endif %}
+            <label class="btn btn-default {{ sel_active }}">
+              {% if page_form_option_value.thumb %}
+                <span class="value-thumb">
+                  <img src="{{ page_form_option_value.thumb }}" alt="{{ page_form_option_value.field_name }}" title="{{ page_form_option_value.field_name }}">
+                </span>
+              {% endif %}
+
+              {% if page_form_option_value.color %}
+                <div class="value-color" style="background: {{ page_form_option_value.color }};"></div>
+              {% endif %}
+
+              <input name="field[{{ page_form_option.page_form_option_id }}]"  autocomplete="off" value="{{ page_form_option_value.page_form_option_value_id }}" type="radio" {{ sel }}>{{ page_form_option_value.name }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type == 'checkbox_toggle' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}" style="text-align: {{ page_form_option.label_align }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div id="input-field{{ page_form_option.page_form_option_id }}" class="btn-group" data-toggle="buttons">
+          {% set sel_count = 0 %}
+          {% for page_form_option_value in page_form_option.page_form_option_value %}
+            {% if sel_count == 0 and page_form_option_value.default_value %}
+              {% set sel = 'checked="checked"' %}
+              {% set sel_active = 'active' %}
+              {% set sel_count = sel_count + 1 %}
+            {% else %}
+              {% set sel = '' %}
+              {% set sel_active = '' %}
+            {% endif %}
+            <label class="btn btn-default {{ sel_active }}">
+              {% if page_form_option_value.thumb %}
+                <span class="value-thumb">
+                  <img src="{{ page_form_option_value.thumb }}" alt="{{ page_form_option_value.field_name }}" title="{{ page_form_option_value.field_name }}">
+                </span>
+              {% endif %}
+
+              {% if page_form_option_value.color %}
+                <div class="value-color" style="background: {{ page_form_option_value.color }};"></div>
+              {% endif %}
+
+              <input name="field[{{ page_form_option.page_form_option_id }}][]"  autocomplete="off" value="{{ page_form_option_value.page_form_option_value_id }}" type="checkbox" {{ sel }}>{{ page_form_option_value.name }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type in ['text', 'number', 'telephone', 'firstname', 'lastname', 'email', 'email_exists', 'postcode', 'address'] %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        {% if page_form_option.input_group_button_text %}
+        <div class="input-group">
+          <input type="text" name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" value="{{ page_form_option.field_dvalue }}" class="form-control" placeholder="{{ page_form_option.field_placeholder }}">
+          <span class="input-group-btn"><button type="button" class="btn cursor-normal">{{ page_form_option.input_group_button_text }}</button></span>
+        </div>
+        {% else %}
+        <input type="text" name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" value="{{ page_form_option.field_dvalue }}" class="form-control" placeholder="{{ page_form_option.field_placeholder }}">
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if page_form_option.type == 'textarea' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <textarea name="field[{{ page_form_option.page_form_option_id }}]" rows="5" placeholder="{{ page_form_option.field_placeholder }}" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control">{{ page_form_option.field_dvalue }}</textarea>
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type == 'google_map' %}
+        {% if page_form_option.field_help %}
+        <div class="form-group {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+
+          <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+            {% if page_form_option.field_help %}
+              <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+            {% endif %}
+          </label>
+
+          {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+          <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+            <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+          </div>
+          {% endif %}
+
+          {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+          <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+            <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+          </div>
+          {% endif %}
+          <iframe src="{{ page_form_option.field_help }}" width="100%" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+        {% endif %}
+      {% endif %}
+
+      {% if page_form_option.type == 'file' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }} upload-wise">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div class="dropzone dropzone-file-area" id="dropzone-upload{{ page_form_option.page_form_option_id }}" data-fieldid="{{ page_form_option.page_form_option_id }}" data-formid="{{ page_form_id }}" data-limit="{{ page_form_option.file_limit ? page_form_option.file_limit : 1 }}">
+          <div id="uploaded-media{{ page_form_option.page_form_option_id }}" class="hidden"></div>
+          <div class="dz-default dz-message">
+            <h4 class="sbold"><i class="fa fa-cloud-upload"></i></h4>
+            <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+          </div>
+        </div>
+        <div id="input-field{{ page_form_option.page_form_option_id }}"></div>
+        {# <input type="hidden" name="field[{{ page_form_option.page_form_option_id }}]" value="" id="input-field{{ page_form_option.page_form_option_id }}" /> #}
+      </div>
+      {% endif %}
+
+      {% if page_form_option.type == 'date' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div class="input-group date">
+          <input type="text" name="field[{{ page_form_option.page_form_option_id }}]" value="{{ page_form_option.field_dvalue }}" data-date-format="YYYY-MM-DD" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control" placeholder="{{ page_form_option.field_placeholder }}" />
+          <span class="input-group-btn">
+          <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+      {% endif %}
+      {% if page_form_option.type == 'datetime' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div class="input-group datetime">
+          <input type="text" name="field[{{ page_form_option.page_form_option_id }}]" value="{{ page_form_option.field_dvalue }}" data-date-format="YYYY-MM-DD HH:mm" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control" placeholder="{{ page_form_option.field_placeholder }}" />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+      {% endif %}
+      {% if page_form_option.type == 'time' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <div class="input-group time">
+          <input type="text" name="field[{{ page_form_option.page_form_option_id }}]" value="{{ page_form_option.field_dvalue }}" data-date-format="HH:mm" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control" placeholder="{{ page_form_option.field_placeholder }}" />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+    {% endif %}
+    {% if page_form_option.type == 'country' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <select name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control country_id">
+          <option value="">{{ text_select }}</option>
+          {% for country in countries %}
+          {% if country.country_id == page_form_option.field_dvalue %}
+          <option value="{{ country.country_id }}" selected="selected">{{ country.name }}
+          </option>
+          {% else %}
+          <option value="{{ country.country_id }}">{{ country.name }}
+          </option>
+          {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+    {% if page_form_option.type == 'zone' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        {% if country_exists %}
+        <select name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control zone_id" rel="{{ page_form_option.field_dvalue }}"></select>
+        {% else %}
+        <select name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" class="form-control zone_id" rel="{{ page_form_option.field_dvalue }}">
+          <option value="">{{ text_select }}</option>
+          {% for zone in zones %}
+          {% if zone.zone_id == page_form_option.field_dvalue %}
+          <option value="{{ zone.zone_id }}" selected="selected">{{ zone.name }}
+          </option>
+          {% else %}
+          <option value="{{ zone.zone_id }}">{{ zone.name }}
+          </option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if page_form_option.type in ['password', 'confirm_password'] %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        <input type="password" name="field[{{ page_form_option.page_form_option_id }}]" id="input-field{{ page_form_option.page_form_option_id }}" value="" class="form-control">
+      </div>
+    {% endif %}
+
+    {% if page_form_option.type == 'multiple_text' %}
+      <div class="form-group{{ page_form_option.required ? ' required' : '' }} {{ page_form_option.width ? 'col-xs-12 col-sm-'~ page_form_option.width : '' }} {{ page_form_option.class }}">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        {% set new_count = 0 %}
+
+        <div id="input-field{{ page_form_option.page_form_option_id }}">
+          {% for i in 1..page_form_option.number_input %}
+            {% if page_form_option.number_input > 1 %}
+              {% set single_width = (100 - page_form_option.number_input) / page_form_option.number_input %}
+            {% else %}
+              {% set single_width = 100 %}
+            {% endif %}
+
+            {% set exploded_placeholder = page_form_option.field_placeholder|split(',') %}
+
+            <input type="text" name="field[{{ page_form_option.page_form_option_id }}][]" value="{{ page_form_option.field_dvalue }}" class="form-control" placeholder="{{ exploded_placeholder[new_count]|trim }}" style="width: {{ single_width }}%; display: inline-block; {% if new_count > 0 %} margin-left: 5px; {% endif %}" />
+            {% set new_count = new_count + 1 %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    {% if page_form_option.type == 'display_message' %}
+      <div class="form-group col-sm-12">
+        <label class="control-label {{ page_form_option.label_display ? '' : 'hide hidden' }}" for="input-field{{ page_form_option.page_form_option_id }}" style="text-align: {{ page_form_option.label_align }}">{{ page_form_option.field_name }}
+          {% if page_form_option.field_help %}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ page_form_option.field_help }}"></i>
+          {% endif %}
+        </label>
+
+        {% if page_form_option.thumb and page_form_option.thumb_type == 'image' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <img src="{{ page_form_option.thumb }}" alt="{{ page_form_option.field_name }}" title="{{ page_form_option.field_name }}">
+        </div>
+        {% endif %}
+
+        {% if page_form_option.icon_class and page_form_option.thumb_type == 'icon' %}
+        <div class="field-thumb" style="text-align: {{ page_form_option.image_align }}">
+          <i class="{{ page_form_option.icon_class }}" {% if page_form_option.icon_size %} style="font-size: {{ page_form_option.icon_size ~ 'px' }}" {% endif %}></i>
+        </div>
+        {% endif %}
+
+        {{ page_form_option.field_display_message }}
+      </div>
+    {% endif %}
+
+    {% if page_form_option.type == 'header' %}
+      <div class="form-group col-sm-12" style="text-align: {{ page_form_option.label_align }}">
+        <h3 class="ci-header {{ page_form_option.class }}">{{ page_form_option.field_name }}</h3>
+      </div>
+    {% endif %}
+
+    {% if page_form_option.type == 'paragraph' %}
+    <div class="form-group col-sm-12" style="text-align: {{ page_form_option.label_align }}">
+      <p class="ci-paragraph {{ page_form_option.class }}">{{ page_form_option.field_name }}</p>
+    </div>
+    {% endif %}
+
+    {% if page_form_option.type == 'hrline' %}
+      <div class="form-group col-sm-12">
+        <hr class="ci-hrline {{ page_form_option.class }}" />
+      </div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}

@@ -146,6 +146,7 @@ class ControllerExtensionModuleIanalytics extends Controller
         $this->data['report_sales']         = $this->load->view($this->modulePath . '/report_sales', $this->data);
         $this->data['report_customer_orders']          = $this->load->view($this->modulePath . '/report_customer_orders', $this->data);
         $this->data['report_product_purchased']        = $this->load->view($this->modulePath . '/report_product_purchased', $this->data);
+        $this->data['report_product_repurchased']        = $this->load->view($this->modulePath . '/report_product_purchased', $this->data);
         $this->data['report_product_purchased_filter'] = $this->load->view($this->modulePath . '/report_product_purchased_filter', $this->data);
 
         $this->data['tab_dashboard']        = $this->load->view($this->modulePath . '/tab_dashboard', $this->data);

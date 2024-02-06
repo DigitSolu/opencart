@@ -59,7 +59,12 @@
       <div class="row">
         <div class="col-sm-12">
           當你到店舖消費時，可出示此二維碼，店員會幫你掃描，即可累積積分或使用積分。
-          <div id="qrcode"></div>
+          <div style="background: rgb(201,173,198); background: linear-gradient(142deg, rgba(201,173,198,1) 10%, rgba(228,204,225,1) 36%, rgba(201,173,198,1) 43%, rgba(228,204,225,1) 90%); width: 400px; height: 250px; border-radius: 10px;box-shadow: 12px 10px 25px 2px rgba(0,0,0,0.52);
+-webkit-box-shadow: 12px 10px 25px 2px rgba(0,0,0,0.52);
+-moz-box-shadow: 12px 10px 25px 2px rgba(0,0,0,0.52); position: relative;">
+            <img src="https://shop.newidolgroup.com/image/catalog/NIG-logo outline-01.png" style="width: 100px; height: 100px;margin-left:10px;" />
+            <div id="qrcode" style="position: absolute; right: 20px; bottom: 20px"></div>
+          </div>
         </div>
       </div>
       <div class="buttons clearfix">
@@ -72,8 +77,8 @@
   $(document).ready(function() {
     const qrcode = new QRCode(document.getElementById("qrcode"), {
       text: '{{ userid }}',
-      width: 200,
-      height: 200,
+      width: 150,
+      height: 150,
     }); 
 
   })

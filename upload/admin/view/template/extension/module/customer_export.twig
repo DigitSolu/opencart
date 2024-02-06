@@ -1,0 +1,90 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+        <div class="card">
+            <div class="card-header"><i class="fa fa-pencil"></i> {{ text_edit }}</div>
+            <div class="card-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">{{ export_format }}</label>
+                        <div class="col-sm-10">
+                            <select name="export_format" id="input-export-format" class="form-control">
+                                <option value="csv" selected="selected">CSV</option>
+                                <option value="txt">TXT</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div style="display: none" class="form-group separator-field">
+                        <label class="col-sm-2 control-label" for="input-name1">{{ separator_text }}</label>
+                        <div class="col-sm-10">
+                            <input name="export_separator" value=";" placeholder="{{ separator_text }}" id="input-export-separator" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div style="text-align: right; margin-top: 50px;" class="col-sm-12">
+                        <button type="button" id="button-export" data-loading-text="Export..." class="btn btn-primary"><i class="fa fa-upload"></i> {{ export_btn_text }} </button>
+                    </div>
+            </div>
+
+            </form>
+        </div>
+    </div>
+    <div style="text-align: center;">
+        <b>Author:</b> Vladislav Emashov<br/>
+        <b>Skype:</b> vlad@emashov.me<br/>
+        <b>Email:</b> <a href="mailto:vlademashov@gmail.com">vlademashov@gmail.com</a><br/>
+    </div>
+</div>
+</div>
+{{ footer }}
+
+
+
+<script>
+
+    var use_custom_separator = false;
+
+    $('#input-export-format').on('change', function (e) {
+
+        if($("#input-export-format").val() == "txt"){
+            $('.separator-field').show();
+            use_custom_separator = true;
+        }else{
+            $('.separator-field').hide();
+            use_custom_separator = false;
+        }
+
+    });
+
+    $("#button-export").click(function () {
+        var url = "{{ iframe_url }}";
+
+        url += "&format="+$("#input-export-format").val();
+
+        if(use_custom_separator == true) url += "&separator="+$("#input-export-separator").val();
+
+        $('<iframe style="display: none" src="'+url+'" frameborder="0" scrolling="no" id="myFrame"></iframe>').appendTo('body');
+
+    });
+</script>
+{{ footer }}

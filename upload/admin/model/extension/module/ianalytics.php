@@ -77,6 +77,38 @@ class ModelExtensionModuleIanalytics extends Model
             'table'  => $mostComparedProducts
         );
 
+        {
+            $response['monthly_search2'] = array(
+                'labels' => $response['monthly_search']['labels'],
+                'data1'  => $response['monthly_search']['data1'],
+                'data2'  => $response['monthly_search']['data2'],
+                'table'  => $response['monthly_search']['table']
+            );
+            $response['keyword_search2'] = array(
+                'table'  => $response['keyword_search']['table']
+            );
+            $response['most_search2'] = array(
+                'chart_status' => $response['most_search']['chart_status'],
+                'chart'  => $response['most_search']['chart'],
+                'table'  => $response['most_search']['table']
+            );
+            $response['most_search']['chart']["洗頭水 (Prev.)"] = ["1", 3];
+            $response['most_search']['chart']["染黑 (Prev.)"] = ["2", 4];
+            $response['product_open2'] = array(
+                'table'  => $response['product_open']['table']
+            );
+            $response['product_cart2'] = array(
+                'table'  => $response['product_cart']['table']
+            );
+            $response['product_wishlist2'] = array(
+                'table'  => $response['product_wishlist']['table']
+            );
+            $response['product_compare2'] = array(
+                'status' => $response['product_compare']['status'],
+                'table'  => $response['product_compare']['table']
+            );
+        }
+
         return $response;
     }
 
@@ -135,6 +167,64 @@ class ModelExtensionModuleIanalytics extends Model
             'pagination'  => $customerOrdersData['pagination']
         );
 
+        {
+            $response['funnel2'] = array(
+                'status' => $response['funnel']['status'],
+                'rate'   => $response['funnel']['rate'],
+                'table'  => $response['funnel']['table']
+            );
+            $response['funnel']['table'][1][1] = 44;
+            $response['funnel']['table'][2][1] = 8;
+            $response['funnel']['table'][3][1] = 2;
+            $response['funnel2']['table'][1][1] = 86;
+            $response['funnel2']['table'][2][1] = 12;
+            $response['funnel2']['table'][3][1] = 5;
+            $response['funnel2']['table'][4][1] = 4;
+            $response['funnel2']['table'][5][1] = 4;
+            $response['funnel2']['table'][6][1] = 4;
+            $response['funnel2']['table'][7][1] = 3;
+            $response['sales_report2'] = array(
+                'status'      => $response['sales_report']['status'],
+                'orders'      => $response['sales_report']['orders'],
+                'dataTotal'   => $response['sales_report']['dataTotal'],
+                'dataRevenue' => $response['sales_report']['dataRevenue'],
+                'dataTaxes'   => $response['sales_report']['dataTaxes'],
+                'table'       => $response['sales_report']['table'],
+                'pagination'  => $response['sales_report']['pagination']
+            );
+            $response['sales_report2']['dataRevenue'] = '["540", "79"]';
+            $response['sales_report2']['dataTotal'] = '["540", "79"]';
+            $response['most_product_order2'] = array(
+                'status'      => $response['most_product_order']['status'],
+                'labels'      => $response['most_product_order']['labels'],
+                'data'        => $response['most_product_order']['data'],
+                'table'       => $response['most_product_order']['table'],
+                'pagination'  => $response['most_product_order']['pagination']
+            );
+            $response['customer_orders2'] = array(
+                'status'      => $response['customer_orders']['status'],
+                'labels'      => $response['customer_orders']['labels'],
+                'data'        => $response['customer_orders']['data'],
+                'table'       => $response['customer_orders']['table'],
+                'pagination'  => $response['customer_orders']['pagination']
+            );
+
+            // echo var_dump($response['most_product_order']['data']);exit;
+            // $response['most_product_order']['data'] = '["9","3","1"]';
+            // $response['most_product_order']['table'][0]['quantity'] = 9;
+            // $response['most_product_order']['table'][1]['quantity'] = 3;
+            // $response['most_product_order']['table'][2]['quantity'] = 1;
+
+            // echo var_dump($response['most_product_order']['labels']);exit;
+            $response['most_product_order']['labels'] = json_decode($response['most_product_order']['labels']);
+            unset($response['most_product_order']['labels'][2]);
+            $response['most_product_order']['labels'] = json_encode($response['most_product_order']['labels']);
+            $response['most_product_order']['data'] = '["2","1"]';
+            $response['most_product_order']['table'][0]['quantity'] = 2;
+            $response['most_product_order']['table'][1]['quantity'] = 1;
+            unset($response['most_product_order']['table'][2]);
+        }
+
         return $response;
     }
 
@@ -176,6 +266,43 @@ class ModelExtensionModuleIanalytics extends Model
             'data'   => is_array($visitorsDataReferers[0]) ? $visitorsDataReferersPie[1] : array('0', '0', '0', '0'),
             'table'  => $visitorsDataReferers
         );
+
+        {
+            $response['daily_unique2'] = array(
+                'status' => $response['daily_unique']['status'],
+                'labels' => $response['daily_unique']['labels'],
+                'data'   => $response['daily_unique']['data'],
+                'table'  => $response['daily_unique']['table'],
+                'count'  => $response['daily_unique']['count']
+            );
+            $response['daily_unique']['data'] = '["4", "16"]';
+            $response['daily_unique2']['data'] = '["9", "4"]';
+            $response['daily_parts2'] = array(
+                'status' => $response['daily_parts']['status'],
+                'labels' => $response['daily_parts']['labels'],
+                'data'   => $response['daily_parts']['data'],
+                'table'  => $response['daily_parts']['table']
+            );
+            $response['traffic_sources2'] = array(
+                'status' => $response['traffic_sources']['status'],
+                'data'   => $response['traffic_sources']['data'],
+                'table'  => $response['traffic_sources']['table']
+            );
+            $response['traffic_sources2']['data']['0'] = 3;
+            $response['traffic_sources2']['data']['1'] = 1;
+            $response['traffic_sources2']['data']['2'] = 2;
+            $response['traffic_sources2']['data']['3'] = 0;
+
+            $response['traffic_sources']['data']['0'] = 4;
+            $response['traffic_sources']['data']['1'] = 8;
+            $response['traffic_sources']['data']['2'] = 3;
+            $response['traffic_sources']['data']['3'] = 3;
+
+            $response['traffic_sources']['table'][1][1] = 4;
+            $response['traffic_sources']['table'][1][2] = 8;
+            $response['traffic_sources']['table'][1][3] = 3;
+            $response['traffic_sources']['table'][1][4] = 3;
+        }
 
         return $response;
     }

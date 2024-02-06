@@ -1,0 +1,149 @@
+{{ header }}
+<style type="text/css">
+{{ css }}
+</style>
+<div id="container" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+
+    {% set field_class = '' %}
+
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1 class="secondary-title">{{ heading_title }}</h1>
+      {{ description }}
+      <div class="form-horizontal">
+        <fieldset id="pageform" class="pageform">
+          <span class="core-formid hide">{{ page_form_id }}</span>
+          {% if fieldset_title %}
+          <legend>{{ fieldset_title }}</legend>
+          {% endif %}
+          <div class="row">
+            {{ include_fields_file }}
+          </div>
+          <div class="cicaptcha">
+            {{ captcha }}
+          </div>
+
+          {% if termcondition_text %}
+          <div class="termcondition_text">{{ termcondition_text }}
+            <input type="checkbox" name="termcondition_agree" value="1" class="pageform_terms" />
+          </div>
+          {% endif %}
+
+          <div class="buttons ci-buttons">
+            {% if reset_button %}
+            <button type="button" class="btn btn-default btn-lg button" id="button-formreset"><i class="fa fa-refresh"></i> {{ button_reset }}</button>
+            {% endif %}
+            <button type="button" class="btn btn-success btn-lg button" id="button-buildersubmit" {% if google_analytic %}onclick="{{ google_analytic }}"{% endif %}><i class="fa fa-paper-plane"></i> {{ button_continue }}</button>
+          </div>
+        </fieldset>
+      </div>
+      {{ bottom_description }}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+
+<script type="text/javascript"><!--
+$('#button-buildersubmit').on('click', function() {
+  $.ajax({
+    url: 'index.php?route=extension/ciformbuilder/form/add&page_form_id={{ page_form_id }}',
+    type: 'post',
+    data: $('#pageform input[type=\'text\'], #pageform input[type=\'hidden\'], #pageform input[type=\'password\'], #pageform input[type=\'radio\']:checked, #pageform input[type=\'checkbox\']:checked, #pageform select, #pageform textarea').serialize(),
+
+    dataType: 'json',
+    beforeSend: function() {
+      $('#button-buildersubmit').button('loading');
+    },
+    complete: function() {
+      $('#button-buildersubmit').button('reset');
+    },
+    success: function(json) {
+      $('.alert, .text-danger').remove();
+      $('.form-group').removeClass('has-error');
+
+      if (json['error']) {
+
+        if (json['error']['field']) {
+          for (i in json['error']['field']) {
+            var element = $('#pageform #input-field' + i.replace('_', '-'));
+            if (element.parent().hasClass('input-group')) {
+              element.parent().after('<div class="text-danger">' + json['error']['field'][i] + '</div>');
+            } else {
+              element.after('<div class="text-danger">' + json['error']['field'][i] + '</div>');
+            }
+          }
+        }
+
+        if(json['captcha']) {
+          $('.cicaptcha').html(json['captcha']);
+        }
+
+        if (json['error']['warning']) {
+          $('.breadcrumb').after('<div class="alert alert-danger warning"><i class="fa fa-exclamation-circle"></i> ' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+          $('html, body').animate({ scrollTop: 0 }, 'slow');
+        }
+
+        // Highlight any found errors
+        $('.text-danger').parent().addClass('has-error');
+      }
+
+      if (json['success']) {
+        location = json['success'];
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+//--></script>
+<script type="text/javascript"><!--
+$('#pageform .country_id').on('change', function() {
+  $.ajax({
+    url: 'index.php?route=extension/ciformbuilder/form/country&country_id=' + this.value,
+    dataType: 'json',
+    beforeSend: function() {
+      $('#pageform .country_id').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+    },
+    complete: function() {
+      $('#pageform .fa-spin').remove();
+    },
+    success: function(json) {
+      var zone_id = $('#pageform .zone_id').attr('rel');
+
+      html = '<option value="">{{ text_select }}</option>';
+
+      if (json['zone'] && json['zone'] != '') {
+        for (i = 0; i < json['zone'].length; i++) {
+          html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+
+          if(json['zone'][i]['zone_id'] == zone_id) {
+            html += 'selected="selected"';
+          }
+
+          html += '>' + json['zone'][i]['name'] + '</option>';
+        }
+      } else {
+        html += '<option value="0" selected="selected">{{ text_none }}</option>';
+      }
+
+      $('#pageform .zone_id').html(html);
+    }
+  });
+});
+
+$('#pageform .country_id').trigger('change');
+//--></script>
+</div>
+{{ footer }}

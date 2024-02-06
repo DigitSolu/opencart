@@ -1,0 +1,15 @@
+{% for info in infos %}
+	<p>
+		<span>
+			<b>{{ info.name }}: </b>
+			{% if info.type == 'file' %}
+				{% for file in info.value %}
+				<a href="{{ file.href }}">{{ file.filename }}</a>
+				<br>
+				{% endfor %}
+			{% else %}
+				{{ info.value }}
+			{% endif %}
+		</span>
+	</p>
+{% endfor %}

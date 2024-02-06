@@ -225,9 +225,8 @@ input[type="checkbox"] {
         bottom: 0;
         left: 50%;
         transform: translateX(-50%); }
-.nav.nav-tabs#language li {
-  border-radius: 4px;
-  border: 2px solid #3aa5da; }
+.nav.nav-tabs#language {
+  margin: 15px 0px 0px 0px; }
   .nav.nav-tabs#language li:not(:first-child) {
     margin: 0 10px; }
   .nav.nav-tabs#language li a {
@@ -235,7 +234,9 @@ input[type="checkbox"] {
     font-size: 13px;
     line-height: 1.5;
     font-weight: normal;
-    margin-right: 0; }
+    margin-right: 0;
+    border: 2px solid #3aa5da;
+    border-radius: 4px; }
   .nav.nav-tabs#language li.active a {
     box-shadow: none;
     background: #4fb5e7;

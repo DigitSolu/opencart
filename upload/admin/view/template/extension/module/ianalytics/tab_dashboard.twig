@@ -37,6 +37,15 @@
                       pointHighlightFill : "#fff",
                       pointHighlightStroke : "rgba(1,159,215,1)",
                       data : {{ tab.visitors.daily_unique.data }}
+                    }, {
+                      label: "{{ text_daily_visitors }}",
+                      fillColor : "rgba(215,159,1,0.2)",
+                      strokeColor : "rgba(215,159,1,1)",
+                      pointColor : "rgba(215,159,1,1)",
+                      pointStrokeColor : "#fff",
+                      pointHighlightFill : "#fff",
+                      pointHighlightStroke : "rgba(215,159,1,1)",
+                      data : {{ tab.visitors.daily_unique2.data }}
                     }]
                   }
                 }
@@ -87,7 +96,31 @@
                       color: "#9D9D9D",
                       highlight: "#9D9D9D",
                       label: "Other"
-                    }
+                    },
+                    {
+                      value: {{ tab.visitors.traffic_sources2.data.0 }},
+                      color:"#21BFF7",
+                      highlight: "#21BFF7",
+                      label: "Direct hits (Prev.)"
+                    },
+                    {
+                      value: {{ tab.visitors.traffic_sources2.data.1 }},
+                      color: "#BEEC5C",
+                      highlight: "#BEEC5C",
+                      label: "Social networks (Prev.)"
+                    },
+                    {
+                      value: {{ tab.visitors.traffic_sources2.data.2 }},
+                      color: "#FFFB3A",
+                      highlight: "#FFFB3A",
+                      label: "Search engines (Prev.)"
+                    },
+                    {
+                      value: {{ tab.visitors.traffic_sources2.data.3 }},
+                      color: "#BDBDBD",
+                      highlight: "#BDBDBD",
+                      label: "Other (Prev.)"
+                    },
                   ]
                 }
               </script>
@@ -124,36 +157,67 @@
                       {% endfor %}
                     ],
                     datasets : [
-                    {
-                      label: "Total",
-                      fillColor: "rgba(180,180,180,0.2)",
-                      strokeColor: "rgba(180,180,180,1)",
-                      pointColor: "rgba(180,180,180,1)",
-                      pointStrokeColor : "#fff",
-                      pointHighlightFill : "#fff",
-                      pointHighlightStroke: "rgba(1,159,215,1)",
-                      data : {{ tab.aftersale.sales_report.dataTotal }}
-                    },
-                    {
-                      label: "Revenue",
-                      fillColor: "rgba(158,204,60,0.2)",
-                      strokeColor: "rgba(158,204,60,1)",
-                      pointColor: "rgba(158,204,60,1)",
-                      pointStrokeColor: "#fff",
-                      pointHighlightFill: "#fff",
-                      pointHighlightStroke: "rgba(151,187,205,1)",
-                      data : {{ tab.aftersale.sales_report.dataRevenue }}
-                    },
-                    {
-                      label: "Taxes",
-                      fillColor : "rgba(204,60,60,0.2)",
-                      strokeColor : "rgba(204,60,60,1)",
-                      pointColor : "rgba(204,60,60,1)",
-                      pointStrokeColor : "#fff",
-                      pointHighlightFill : "#fff",
-                      pointHighlightStroke : "rgba(204,60,60,1)",
-                      data : {{ tab.aftersale.sales_report.dataTaxes }}
-                    },]
+                      {
+                        label: "Total",
+                        fillColor: "rgba(180,180,180,0.2)",
+                        strokeColor: "rgba(180,180,180,1)",
+                        pointColor: "rgba(180,180,180,1)",
+                        pointStrokeColor : "#fff",
+                        pointHighlightFill : "#fff",
+                        pointHighlightStroke: "rgba(1,159,215,1)",
+                        data : {{ tab.aftersale.sales_report.dataTotal }}
+                      },
+                      {
+                        label: "Revenue",
+                        fillColor: "rgba(158,204,60,0.2)",
+                        strokeColor: "rgba(158,204,60,1)",
+                        pointColor: "rgba(158,204,60,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data : {{ tab.aftersale.sales_report.dataRevenue }}
+                      },
+                      {
+                        label: "Taxes",
+                        fillColor : "rgba(204,60,60,0.2)",
+                        strokeColor : "rgba(204,60,60,1)",
+                        pointColor : "rgba(204,60,60,1)",
+                        pointStrokeColor : "#fff",
+                        pointHighlightFill : "#fff",
+                        pointHighlightStroke : "rgba(204,60,60,1)",
+                        data : {{ tab.aftersale.sales_report.dataTaxes }}
+                      },
+                      {
+                        label: "Total (Prev.)",
+                        fillColor: "rgba(210,210,210,0.2)",
+                        strokeColor: "rgba(210,210,210,1)",
+                        pointColor: "rgba(210,210,210,1)",
+                        pointStrokeColor : "#fff",
+                        pointHighlightFill : "#fff",
+                        pointHighlightStroke: "rgba(1,159,215,1)",
+                        data : {{ tab.aftersale.sales_report2.dataTotal }}
+                      },
+                      {
+                        label: "Revenue (Prev.)",
+                        fillColor: "rgba(178,224,80,0.2)",
+                        strokeColor: "rgba(178,224,80,1)",
+                        pointColor: "rgba(178,224,80,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data : {{ tab.aftersale.sales_report2.dataRevenue }}
+                      },
+                      {
+                        label: "Taxes (Prev.)",
+                        fillColor : "rgba(224,80,80,0.2)",
+                        strokeColor : "rgba(224,80,80,1)",
+                        pointColor : "rgba(224,80,80,1)",
+                        pointStrokeColor : "#fff",
+                        pointHighlightFill : "#fff",
+                        pointHighlightStroke : "rgba(204,60,60,1)",
+                        data : {{ tab.aftersale.sales_report2.dataTaxes }}
+                      },
+                    ]
                   }
                 }
               </script>
@@ -206,7 +270,8 @@
       <h4>{{ text_funnel_conversion_rate }} {{ tab.aftersale.funnel.rate }} <div style="float:right;"><a href="#conversion-rate-more" data-toggle="tab" class="btn btn-sm btn-default">{{ text_more }}</a></div></h4>
       <br />
       <div class="thumbnail">
-        <center>
+        <center style="display: flex">
+          <div id="funnelDashboard2" style="margin-right: 15px;" class="iFunnel"></div>
           <div id="funnelDashboard" class="iFunnel"></div>
         </center>
         {% if tab.aftersale.funnel.status %}
@@ -220,8 +285,19 @@
               ['{{ text_confirm_order }}', {{ tab.aftersale.funnel.table.6[1] ?: 0 }}],
               ['{{ text_successful_order }}', {{ tab.aftersale.funnel.table.7[1] ?: 0 }}]
             ];
-            var chart = new FunnelChart(funnelData, 300, 550, 1/2);
+            var chart = new FunnelChart(funnelData, 150, 550, 1/2);
             chart.draw('#funnelDashboard', 2);
+            var funnelData2 = [
+              ['{{ text_first_visit }}', {{ tab.aftersale.funnel2.table.1[1] }}],
+              ['{{ text_add_to_cart }}', {{ tab.aftersale.funnel2.table.2[1] ?: 0 }}],
+              ['{{ text_login_register }}', {{ tab.aftersale.funnel2.table.3[1] ?: 0 }}],
+              ['{{ text_delivery_method }}', {{ tab.aftersale.funnel2.table.4[1] ?: 0 }}],
+              ['{{ text_payment_method }}', {{ tab.aftersale.funnel2.table.5[1] ?: 0 }}],
+              ['{{ text_confirm_order }}', {{ tab.aftersale.funnel2.table.6[1] ?: 0 }}],
+              ['{{ text_successful_order }}', {{ tab.aftersale.funnel2.table.7[1] ?: 0 }}]
+            ];
+            var chart = new FunnelChart(funnelData2, 150, 550, 1/2);
+            chart.draw('#funnelDashboard2', 2);
           </script>
         {% else %}
           {{ text_no_chart_data }}

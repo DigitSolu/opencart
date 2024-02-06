@@ -106,6 +106,7 @@ $(document).ready(function(e) {
 	});
 
 	$('.iAnalyticsSelectBox').change(function(e) {
+		var fromDate2 = new Date(); fromDate2.setTime(nowDate.getTime());
 		var fromDate = new Date(); fromDate.setTime(nowDate.getTime());
 		var toDate = new Date(); toDate.setTime(nowDate.getTime());
 		var substract = 0;
@@ -119,9 +120,13 @@ $(document).ready(function(e) {
 
 		fromDate.setTime(fromDate.getTime() - substract);
 
+		fromDate2.setTime(fromDate.getTime() - substract);
+
 		if (substract > 0) {
 			$('.iAnalyticsDateFilter .toDate').datepicker('setDate', toDate);
 			$('.iAnalyticsDateFilter .fromDate').datepicker('setDate', fromDate);
+			$('.iAnalyticsDateFilter .toDate2').datepicker('setDate', fromDate);
+			$('.iAnalyticsDateFilter .fromDate2').datepicker('setDate', fromDate2);
 		}
 	});
 

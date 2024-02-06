@@ -401,6 +401,33 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 
+
+			
+			/* EXPORT Orders */
+		
+			$orderexport = array();
+				
+				$orderexport[] = array(
+					'name'	   => $this->language->get('text_orderexport'),
+					'href'     => $this->url->link('extension/order_export', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()
+				);			
+			
+			
+			
+			if ($orderexport) {	
+				$data['menus'][] = array(
+					'id'       => 'menu-report',
+					'icon'	   => 'fa fa-file-excel-o', 
+					'name'	   => $this->language->get('text_orderexport'),
+					'href'     => '',
+					'children' => $orderexport
+				);	
+			}
+			
+			/* EXPORT Orders */
+			
+			
 			// System
 			$system = array();
 

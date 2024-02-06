@@ -3,7 +3,7 @@
     <name>d_twig_manager</name>
     <code>d_twig_manager</code>
     <description>Adds support for twig templating engine</description>
-    <version>2.1.1</version>
+    <version>2.1.2</version>
     <author>Dreamvention</author>
     <link>http://dreamvention.com</link>
     <file path="system/engine/loader.php">
